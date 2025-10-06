@@ -30,8 +30,12 @@ class PreferenceInterface:
         print("🤖 SYSTÈME DE PRÉFÉRENCES - ÉVALUATION DE TRAJECTOIRES")
         print("="*100)
         
-        # Affichage de la comparaison
-        trajectory_manager.display_trajectory_comparison(traj1, traj2)
+        # Nouvelle visualisation graphique des chemins au lieu du dump texte
+        try:
+            trajectory_manager.visualize_trajectory_paths(traj1, traj2)
+        except Exception as e:
+            print(f"⚠️ Erreur visualisation chemins ({e}), fallback texte")
+            trajectory_manager.display_trajectory_comparison(traj1, traj2)
         
         # Demande de préférence
         print("\n" + "🔥 VOTRE CHOIX:")
@@ -41,19 +45,23 @@ class PreferenceInterface:
         print("1️⃣  - Je préfère la TRAJECTOIRE A")
         print("2️⃣  - Je préfère la TRAJECTOIRE B") 
         print("0️⃣  - Les deux sont équivalentes (égalité)")
-        print("🆘 - Tapez 'help' pour plus d'informations")
-        print("🎯 - Tapez 'viz' pour voir la visualisation graphique")
+        print("🆘  - 'help' pour plus d'informations")
+        print("📊  - 'details' pour tableau comparatif texte")
+        print("🔄  - 'refresh' pour régénérer la vue graphique")
         print("")
         
         while True:
             try:
-                choice = input("👉 Votre choix (1/2/0/help/viz): ").strip().lower()
+                choice = input("👉 Votre choix (1/2/0/help/details/refresh): ").strip().lower()
                 
                 if choice == 'help':
                     self._display_help()
                     continue
-                elif choice == 'viz':
-                    trajectory_manager.visualize_trajectories(traj1, traj2)
+                elif choice == 'details':
+                    trajectory_manager.display_trajectory_comparison(traj1, traj2)
+                    continue
+                elif choice == 'refresh':
+                    trajectory_manager.visualize_trajectory_paths(traj1, traj2)
                     continue
                 elif choice in ['1', '2', '0']:
                     choice_int = int(choice)

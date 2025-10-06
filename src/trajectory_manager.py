@@ -283,6 +283,100 @@ class TrajectoryManager:
             print(f"Visualisation sauvegardée: {save_path}")
         
         plt.show()
+
+    # ------------------------ NOUVELLES VISUALISATIONS ------------------------ #
+    def _decode_taxi_state(self, state: int) -> Tuple[int, int, int, int]:
+        """Decode l'état Taxi-v3 sans dépendre de l'env Gym.
+
+        Returns:
+            (taxi_row, taxi_col, passenger_loc, destination)
+        """
+        destination = state % 4
+        state //= 4
+        passenger_loc = state % 5
+        state //= 5
+        taxi_col = state % 5
+        state //= 5
+        taxi_row = state
+        return taxi_row, taxi_col, passenger_loc, destination
+
+    def visualize_trajectory_paths(self, traj1: Trajectory, traj2: Trajectory,
+                                   save_path: str = None, max_steps: int = 100):
+        """Visualisation compacte des chemins des deux trajectoires sur la grille Taxi.
+
+        - Affiche la grille (5x5) avec chemin suivi par le taxi.
+        - Points clefs: départ (S), arrivée (F), destination (D), position passager initial (P) si non dans taxi.
+        - Couleurs différentes pour distinguer les deux trajectoires.
+        """
+        # Coordonnées officielles locs (R, G, Y, B) utilisées par Taxi-v3
+        locs = [(0, 0), (0, 4), (4, 0), (4, 3)]
+
+        def extract_path(traj: Trajectory):
+            rows, cols = [], []
+            passenger_initial = None
+            destination = None
+            for i, step in enumerate(traj.steps[:max_steps]):
+                r, c, passenger_loc, dest = self._decode_taxi_state(step.state)
+                rows.append(r)
+                cols.append(c)
+                if i == 0:
+                    destination = locs[dest]
+                    if passenger_loc != 4:  # 4 = dans le taxi
+                        passenger_initial = locs[passenger_loc]
+            # Dernier état pour marquer la fin
+            if traj.steps:
+                rF, cF, _, _ = self._decode_taxi_state(traj.steps[min(len(traj.steps)-1, max_steps-1)].next_state)
+                rows.append(rF)
+                cols.append(cF)
+            return rows, cols, passenger_initial, destination
+
+        rows1, cols1, pass1, dest1 = extract_path(traj1)
+        rows2, cols2, pass2, dest2 = extract_path(traj2)
+
+        fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+        titles = [f"Trajectoire A (R={traj1.total_reward}, L={traj1.episode_length})",
+                  f"Trajectoire B (R={traj2.total_reward}, L={traj2.episode_length})"]
+        data = [(rows1, cols1, pass1, dest1, traj1), (rows2, cols2, pass2, dest2, traj2)]
+
+        for ax, (rows, cols, passenger_pos, dest_pos, traj), title in zip(axes, data, titles):
+            # Grille
+            ax.set_title(title)
+            ax.set_xlim(-0.5, 4.5)
+            ax.set_ylim(4.5, -0.5)
+            ax.set_xticks(range(5))
+            ax.set_yticks(range(5))
+            ax.grid(True, alpha=0.3)
+            ax.set_aspect('equal')
+
+            # Destination
+            if dest_pos:
+                ax.scatter(dest_pos[1], dest_pos[0], marker='*', s=180, c='gold', edgecolor='black', label='Destination (D)')
+            # Passenger initial
+            if passenger_pos:
+                ax.scatter(passenger_pos[1], passenger_pos[0], marker='s', s=120, c='cyan', edgecolor='black', label='Passager (P)')
+
+            # Path
+            ax.plot(cols, rows, '-o', color='#1f77b4', linewidth=2, markersize=5, alpha=0.85, label='Chemin')
+            if cols and rows:
+                ax.text(cols[0]-0.2, rows[0]-0.2, 'S', color='green', fontsize=10, fontweight='bold')
+                ax.text(cols[-1]-0.2, rows[-1]-0.2, 'F', color='red', fontsize=10, fontweight='bold')
+
+            eff = traj.total_reward / traj.episode_length if traj.episode_length > 0 else 0
+            ax.text(0.02, 0.97, f"Eff: {eff:.2f}", transform=ax.transAxes, va='top', fontsize=9,
+                    bbox=dict(boxstyle='round,pad=0.25', facecolor='white', alpha=0.7, linewidth=0.5))
+
+            # Légende compacte
+            handles, labels = ax.get_legend_handles_labels()
+            if handles:
+                ax.legend(loc='lower right', fontsize=7, framealpha=0.8)
+
+        plt.tight_layout()
+        if save_path:
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+            plt.savefig(save_path, dpi=200, bbox_inches='tight')
+            print(f"Visualisation chemins sauvegardée: {save_path}")
+        plt.show()
+
     
     def save_trajectories(self, filepath: str):
         """Sauvegarde toutes les trajectoires collectées"""
