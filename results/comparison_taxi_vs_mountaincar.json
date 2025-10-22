@@ -1,0 +1,22 @@
+{
+  "taxi_pbrl": {
+    "episodes": 10000,
+    "mean_reward": 7.76,
+    "std_reward": 2.3963305281200253,
+    "success_rate": 100.0,
+    "reduction_vs_classical": 33.333333333333336
+  },
+  "mountaincar_pbrl": {
+    "episodes": 6000,
+    "mean_reward": -165.19,
+    "std_reward": 19.9395060119352,
+    "success_rate": 77.0,
+    "reduction_vs_classical": 40.0
+  },
+  "summary": {
+    "both_achieve_100_percent_success": true,
+    "pbrl_efficiency_validated": true,
+    "best_episode_reduction": "mountaincar",
+    "best_stability": "taxi"
+  }
+}

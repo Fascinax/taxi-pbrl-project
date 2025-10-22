@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-10-22T16:34:41.866461",
+  "environment": "MountainCar-v0",
+  "training": {
+    "classical_episodes": 10000,
+    "pbrl_episodes": 6000,
+    "pbrl_preferences_used": 25,
+    "efficiency_gain_percent": 40.0,
+    "classical_final_reward_100": -141.17,
+    "pbrl_final_reward_100": -162.12,
+    "pbrl_training_time_seconds": 64.678299
+  },
+  "evaluation": {
+    "episodes": 200,
+    "classical": {
+      "mean_reward": -160.015,
+      "std_reward": 40.8107188738449,
+      "min_reward": -200.0,
+      "max_reward": -110.0,
+      "mean_length": 160.015,
+      "success_rate": 50.0
+    },
+    "pbrl": {
+      "mean_reward": -158.64,
+      "std_reward": 23.883684807834825,
+      "min_reward": -200.0,
+      "max_reward": -142.0,
+      "mean_length": 158.64,
+      "success_rate": 76.0
+    },
+    "improvements": {
+      "reward_diff": 1.375,
+      "length_diff": -1.375,
+      "success_rate_diff": 26.0
+    }
+  }
+}
