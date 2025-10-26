@@ -13,6 +13,7 @@ from datetime import datetime
 from src.mountain_car_agent import MountainCarAgent
 from src.trajectory_manager import TrajectoryManager, Trajectory, TrajectoryStep
 from src.preference_interface import PreferenceInterface
+from src.visual_mountaincar_comparator import VisualMountainCarComparator, MountainCarTrajectory as VisualMCTraj
 
 
 class MountainCarTrajectory(Trajectory):
@@ -277,29 +278,66 @@ def main():
     print(f"👤 COLLECTE DE {len(pairs)} PRÉFÉRENCES")
     print(f"{'='*80}")
     print("Instructions:")
-    print("  1 ou A : Préférer la trajectoire A")
-    print("  2 ou B : Préférer la trajectoire B")
+    print("  🎬 La visualisation graphique s'affiche automatiquement")
+    print("  1 ou A : Préférer la trajectoire A (cyan)")
+    print("  2 ou B : Préférer la trajectoire B (orange)")
     print("  0 ou E : Égalité / Indifférent")
+    print("  replay : Revoir la visualisation")
+    print("  text   : Afficher la comparaison textuelle")
     print("  Q      : Quitter")
     print(f"{'='*80}\n")
     
     preferences = []
+    visualizer = None
     
     for idx, (traj_a, traj_b) in enumerate(pairs):
         print(f"\n{'='*80}")
         print(f"COMPARAISON {idx + 1}/{len(pairs)}")
         print(f"{'='*80}")
         
-        # Affichage de la comparaison
-        display_mountaincar_comparison(traj_a, traj_b)
+        # Visualisation graphique automatique
+        try:
+            if visualizer is None:
+                visualizer = VisualMountainCarComparator()
+            
+            # Créer des copies VisualMCTraj pour le visualiseur
+            visual_traj_a = VisualMCTraj(traj_a.steps, traj_a.total_reward, 
+                                          traj_a.episode_length, traj_a.episode_id)
+            visual_traj_a.max_position = traj_a.max_position
+            visual_traj_a.max_velocity = traj_a.max_velocity
+            visual_traj_a.success = traj_a.success
+            
+            visual_traj_b = VisualMCTraj(traj_b.steps, traj_b.total_reward,
+                                          traj_b.episode_length, traj_b.episode_id)
+            visual_traj_b.max_position = traj_b.max_position
+            visual_traj_b.max_velocity = traj_b.max_velocity
+            visual_traj_b.success = traj_b.success
+            
+            visualizer.replay_trajectories_side_by_side(visual_traj_a, visual_traj_b, delay=0.05)
+            
+        except Exception as e:
+            print(f"⚠️ Erreur lors de la visualisation: {e}")
+            print("📊 Passage à l'affichage textuel...")
+            display_mountaincar_comparison(traj_a, traj_b)
         
         # Collecte de la préférence
         while True:
-            choice = input("Votre choix (1/A, 2/B, 0/E, Q pour quitter): ").strip().upper()
+            choice = input("\n👉 Votre choix (1/A, 2/B, 0/E, replay, text, Q): ").strip().upper()
             
             if choice in ['Q', 'QUIT']:
                 print("\n⚠️  Arrêt de la collecte...")
                 break
+            elif choice == 'REPLAY':
+                # Rejouer la visualisation
+                try:
+                    visualizer.replay_trajectories_side_by_side(visual_traj_a, visual_traj_b, delay=0.05)
+                except Exception as e:
+                    print(f"⚠️ Erreur: {e}")
+                continue
+            elif choice == 'TEXT':
+                # Afficher la comparaison textuelle
+                display_mountaincar_comparison(traj_a, traj_b)
+                continue
             elif choice in ['1', 'A']:
                 preference_choice = 1
                 print("✅ Vous avez choisi: Trajectoire A\n")
@@ -313,7 +351,7 @@ def main():
                 print("✅ Vous avez choisi: Égalité\n")
                 break
             else:
-                print("❌ Choix invalide. Utilisez 1/A, 2/B, 0/E, ou Q")
+                print("❌ Choix invalide. Utilisez 1/A, 2/B, 0/E, replay, text, ou Q")
         
         if choice in ['Q', 'QUIT']:
             break
@@ -343,6 +381,10 @@ def main():
             with open(temp_path, 'w') as f:
                 json.dump(preferences, f, indent=2)
             print(f"💾 Sauvegarde intermédiaire: {len(preferences)} préférences")
+    
+    # Fermer le visualiseur
+    if visualizer:
+        visualizer.close()
     
     env.close()
     
