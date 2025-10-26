@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime
 from src.trajectory_manager import Trajectory, TrajectoryManager
+from src.visual_trajectory_comparator import VisualTrajectoryComparator
 
 class PreferenceInterface:
     """
@@ -14,7 +15,8 @@ class PreferenceInterface:
         self.preference_counter = 0
     
     def collect_preference_interactive(self, traj1: Trajectory, traj2: Trajectory, 
-                                     trajectory_manager: TrajectoryManager) -> int:
+                                     trajectory_manager: TrajectoryManager, 
+                                     use_visual: bool = True) -> int:
         """
         Interface interactive pour collecter une préférence entre deux trajectoires
         
@@ -22,6 +24,7 @@ class PreferenceInterface:
             traj1: Première trajectoire
             traj2: Deuxième trajectoire
             trajectory_manager: Manager pour affichage des trajectoires
+            use_visual: Si True, affiche la visualisation Gymnasium (défaut: True)
             
         Returns:
             int: Choix de l'utilisateur (1 pour traj1, 2 pour traj2, 0 pour égalité)
@@ -30,11 +33,19 @@ class PreferenceInterface:
         print("🤖 SYSTÈME DE PRÉFÉRENCES - ÉVALUATION DE TRAJECTOIRES")
         print("="*100)
         
-        # Nouvelle visualisation graphique des chemins au lieu du dump texte
-        try:
-            trajectory_manager.visualize_trajectory_paths(traj1, traj2)
-        except Exception as e:
-            print(f"⚠️ Erreur visualisation chemins ({e}), fallback texte")
+        # Visualisation graphique Gymnasium (par défaut)
+        if use_visual:
+            try:
+                visualizer = VisualTrajectoryComparator()
+                visualizer.replay_trajectories_side_by_side(traj1, traj2, delay=0.3)
+                visualizer.close()
+            except Exception as e:
+                print(f"⚠️ Erreur lors de la visualisation graphique: {e}")
+                print("📊 Passage à l'affichage textuel...")
+                use_visual = False
+        
+        # Affichage de la comparaison textuelle (toujours disponible)
+        if not use_visual:
             trajectory_manager.display_trajectory_comparison(traj1, traj2)
         
         # Demande de préférence
@@ -42,26 +53,37 @@ class PreferenceInterface:
         print("Quelle trajectoire préférez-vous ?")
         print("💡 Critères à considérer: efficacité, récompense, style de navigation, succès...")
         print("")
-        print("1️⃣  - Je préfère la TRAJECTOIRE A")
-        print("2️⃣  - Je préfère la TRAJECTOIRE B") 
+        print("1️⃣  - Je préfère la TRAJECTOIRE A (cyan)")
+        print("2️⃣  - Je préfère la TRAJECTOIRE B (orange)") 
         print("0️⃣  - Les deux sont équivalentes (égalité)")
-        print("🆘  - 'help' pour plus d'informations")
-        print("📊  - 'details' pour tableau comparatif texte")
-        print("🔄  - 'refresh' pour régénérer la vue graphique")
+        print("🆘 - Tapez 'help' pour plus d'informations")
+        print("🎯 - Tapez 'replay' pour revoir la visualisation graphique")
+        print("📊 - Tapez 'text' pour voir la comparaison textuelle détaillée")
         print("")
         
         while True:
             try:
-                choice = input("👉 Votre choix (1/2/0/help/details/refresh): ").strip().lower()
+                choice = input("👉 Votre choix (1/2/0/help/replay/text): ").strip().lower()
                 
                 if choice == 'help':
                     self._display_help()
                     continue
-                elif choice == 'details':
+                elif choice == 'replay':
+                    # Rejouer la visualisation Gymnasium
+                    try:
+                        visualizer = VisualTrajectoryComparator()
+                        visualizer.replay_trajectories_side_by_side(traj1, traj2, delay=0.3)
+                        visualizer.close()
+                    except Exception as e:
+                        print(f"⚠️ Erreur lors de la visualisation: {e}")
+                    continue
+                elif choice == 'text':
+                    # Afficher la comparaison textuelle détaillée
                     trajectory_manager.display_trajectory_comparison(traj1, traj2)
                     continue
-                elif choice == 'refresh':
-                    trajectory_manager.visualize_trajectory_paths(traj1, traj2)
+                elif choice == 'viz':
+                    # Rétrocompatibilité avec l'ancien 'viz'
+                    trajectory_manager.visualize_trajectories(traj1, traj2)
                     continue
                 elif choice in ['1', '2', '0']:
                     choice_int = int(choice)
@@ -82,7 +104,7 @@ class PreferenceInterface:
                     
                     return choice_int
                 else:
-                    print("❌ Choix invalide. Utilisez 1, 2, 0, 'help' ou 'viz'")
+                    print("❌ Choix invalide. Utilisez 1, 2, 0, 'help', 'replay' ou 'text'")
                     
             except (ValueError, KeyboardInterrupt):
                 print("❌ Entrée invalide ou interruption. Réessayez.")

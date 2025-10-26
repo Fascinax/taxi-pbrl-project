@@ -21,7 +21,8 @@ def main():
     os.makedirs(results_dir, exist_ok=True)
     
     # Création de l'environnement
-    env = gym.make("Taxi-v3")
+    # Note: render_mode='human' permet l'affichage visuel pour le mode interactif
+    env = gym.make("Taxi-v3", render_mode="human")
     n_states = 500
     n_actions = 6
     
@@ -135,7 +136,10 @@ def main():
     elif mode == "2":
         # Mode 2: Entraînement interactif
         print("\n🎯 MODE 2: Entraînement interactif avec nouvelles préférences")
+        print("Note: Les replays visuels Gymnasium seront affichés pour chaque comparaison")
         
+        # L'environnement passé à interactive_training_loop est déjà configuré
+        # avec render_mode='human' donc les replays visuels fonctionneront
         pbrl_rewards, iteration_summaries = pbrl_agent.interactive_training_loop(
             env, preference_interface, trajectory_manager,
             episodes_per_iteration=2000,

@@ -2,31 +2,31 @@
   "preferences": [
     {
       "preference_id": 0,
-      "timestamp": "2025-10-06T16:45:18.517005",
-      "trajectory_a_id": 0,
-      "trajectory_b_id": 7,
-      "trajectory_a_reward": 10,
-      "trajectory_b_reward": 4,
-      "trajectory_a_length": 11,
-      "trajectory_b_length": 17,
+      "timestamp": "2025-10-22T15:20:44.181694",
+      "trajectory_a_id": 2,
+      "trajectory_b_id": 3,
+      "trajectory_a_reward": 13,
+      "trajectory_b_reward": 5,
+      "trajectory_a_length": 8,
+      "trajectory_b_length": 16,
       "choice": 1,
-      "reasoning": ";",
-      "trajectory_a_efficiency": 0.9090909090909091,
-      "trajectory_b_efficiency": 0.23529411764705882
+      "reasoning": "Aucune justification fournie",
+      "trajectory_a_efficiency": 1.625,
+      "trajectory_b_efficiency": 0.3125
     },
     {
       "preference_id": 1,
-      "timestamp": "2025-10-06T16:45:32.386413",
-      "trajectory_a_id": 1,
-      "trajectory_b_id": 4,
-      "trajectory_a_reward": 8,
-      "trajectory_b_reward": 5,
-      "trajectory_a_length": 13,
-      "trajectory_b_length": 16,
+      "timestamp": "2025-10-22T15:21:06.105514",
+      "trajectory_a_id": 7,
+      "trajectory_b_id": 1,
+      "trajectory_a_reward": 10,
+      "trajectory_b_reward": 8,
+      "trajectory_a_length": 11,
+      "trajectory_b_length": 13,
       "choice": 1,
-      "reasoning": "l",
-      "trajectory_a_efficiency": 0.6153846153846154,
-      "trajectory_b_efficiency": 0.3125
+      "reasoning": "Aucune justification fournie",
+      "trajectory_a_efficiency": 0.9090909090909091,
+      "trajectory_b_efficiency": 0.6153846153846154
     }
   ],
   "statistics": {
@@ -45,7 +45,7 @@
     "efficiency_preference_tendency": 100.0
   },
   "metadata": {
-    "created_at": "2025-10-06T16:45:32.406236",
+    "created_at": "2025-10-22T15:21:06.106641",
     "total_preferences": 2
   }
 }

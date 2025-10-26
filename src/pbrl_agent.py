@@ -250,7 +250,11 @@ class PreferenceBasedQLearning(QLearningAgent):
             
             # 4. Collecte de préférences
             print(f"4️⃣ Collecte de préférences ({len(pairs)} comparaisons)...")
-            preferences = preference_interface.collect_preference_batch(pairs, trajectory_manager)
+            preferences = preference_interface.collect_preference_batch(
+                pairs, trajectory_manager, 
+                env=env, 
+                visual_replay=True
+            )
             
             # 5. Application des nouvelles préférences
             print("5️⃣ Application des nouvelles préférences...")

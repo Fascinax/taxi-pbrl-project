@@ -97,7 +97,7 @@ def main():
     demo_choice = input("\n👉 Voulez-vous tester l'interface de préférences ? (y/n): ").strip().lower()
     
     if demo_choice in ['y', 'yes', 'oui', 'o']:
-        # Session de préférences interactive
+        # Session de préférences interactive avec visualisation Gymnasium
         print("\n🎯 SESSION DE PRÉFÉRENCES INTERACTIVE")
         collected_preferences = preference_interface.collect_preference_batch(
             interesting_pairs[:2],  # Limiter à 2 comparaisons pour la démo

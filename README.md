@@ -31,24 +31,45 @@ taxi-pbrl-project/
 python train_classical_agent.py
 ```
 
-**2. Démonstration du système de préférences:**
+**2. Démonstration du système de préférences (🆕 avec visualisation graphique):**
 ```bash
 python demo_preferences.py
 ```
+> 🎬 **Nouveau !** Les trajectoires s'affichent maintenant visuellement côte à côte avec le rendu Gymnasium !
 
-**3. Entraînement et comparaison avec l'agent PbRL:**
+**3. Test rapide de la visualisation:**
+```bash
+python test_visual_preference.py
+```
+
+**4. Rejouer des trajectoires sauvegardées:**
+```bash
+python test_visual_replay.py
+```
+
+**5. Entraînement et comparaison avec l'agent PbRL:**
 ```bash
 python train_pbrl_agent.py
 ```
 
-**4. Analyse statistique avancée:**
+**6. Analyse statistique avancée:**
 ```bash
 python statistical_analysis.py
 ```
 
+### 🎬 Nouvelle Fonctionnalité: Visualisation Graphique
+
+Le système de préférences inclut maintenant une **visualisation Gymnasium interactive** :
+- 📺 Affichage côte à côte des deux trajectoires
+- 🎮 Contrôles interactifs (pause, replay)
+- 📊 Statistiques en temps réel
+- 🎯 Interface intuitive pour comparer visuellement
+
+**Voir le guide complet:** [`docs/visual_preferences_guide.md`](docs/visual_preferences_guide.md)
+
 ### Modes d'entraînement PbRL:
 1. **Mode automatique**: Utilise des préférences simulées
-2. **Mode interactif**: Collecte tes préférences en temps réel  
+2. **Mode interactif** 🆕: Collecte tes préférences en temps réel avec visualisation graphique
 3. **Mode standard**: Agent normal pour comparaison
 
 ## Fichiers générés
