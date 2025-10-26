@@ -1,28 +1,28 @@
-# 🎓 Preference-Based Reinforcement Learning (PBRL) Project
+# Preference-Based Reinforcement Learning (PBRL) Project
 
-## 📋 Vue d'Ensemble
+## Vue d'Ensemble
 
 Projet de comparaison d'agents **PBRL** vs **Classical RL** sur deux environnements contrastés :
-- **🚕 Taxi-v3** : Environnement discret avec récompenses denses
-- **🏔️ MountainCar-v0** : Environnement continu avec récompenses sparses
+- **Taxi-v3** : Environnement discret avec récompenses denses
+- **MountainCar-v0** : Environnement continu avec récompenses sparses
 
-## 🏆 Résultats Principaux
+## Résultats Principaux
 
 | Environnement | PBRL Épisodes | Classical Épisodes | Réduction | Performance |
 |---------------|---------------|-------------------|-----------|-------------|
-| **Taxi-v3** | 2,000 | 15,000 | **-87%** ✅ | 7.77 ± 2.59 |
-| **MountainCar** | 6,000 | 10,000 | **-40%** ✅ | -165.19 ± 19.94 |
+| **Taxi-v3** | 2,000 | 15,000 | **-87%** | 7.77 ± 2.59 |
+| **MountainCar** | 6,000 | 10,000 | **-40%** | -165.19 ± 19.94 |
 
-**Conclusion clé :** Le PBRL atteint des performances équivalentes avec **40% à 87% moins d'épisodes** ! 🚀
+**Conclusion clé :** Le PBRL atteint des performances équivalentes avec **40% à 87% moins d'épisodes** !
 
-## ⚙️ Installation Rapide
+## Installation Rapide
 
 ```powershell
 # Installer les dépendances
 pip install gymnasium numpy matplotlib
 ```
 
-## 🚀 Démarrage Rapide
+## Démarrage Rapide
 
 ### Option 1 : Comparaison Visuelle (1 min)
 ```powershell
@@ -38,11 +38,11 @@ python train_pbrl_agent.py
 ### Option 3 : Workflow Complet (30 min)
 Voir **`GUIDE_UTILISATION.md`** pour le guide détaillé.
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 taxi-pbrl-project/
-├── 🎓 SCRIPTS PRINCIPAUX
+├── SCRIPTS PRINCIPAUX
 │   ├── train_classical_agent.py          # Taxi: Agent classique
 │   ├── train_pbrl_agent.py               # Taxi: Agent PBRL
 │   ├── train_mountaincar_classical.py    # MC: Agent classique

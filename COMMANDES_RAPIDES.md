@@ -1,15 +1,16 @@
-# 🚀 COMMANDES ESSENTIELLES - AIDE-MÉMOIRE
 
-## 📋 Installation
+        # COMMANDES ESSENTIELLES - AIDE-MÉMOIRE
+
+## Installation
 
 ```powershell
 # Installer les dépendances
 pip install gymnasium numpy matplotlib
 ```
 
-## 🎯 Utilisation Rapide
+## Utilisation Rapide
 
-### Option 1 : Visualisation Comparative (1 min) ⭐
+### Option 1 : Visualisation Comparative (1 min)
 ```powershell
 python compare_taxi_vs_mountaincar.py
 # Génère : results/comparison_taxi_vs_mountaincar_pbrl.png
@@ -36,18 +37,18 @@ python train_mountaincar_pbrl.py
 python compare_taxi_vs_mountaincar.py
 ```
 
-## 🧹 Nettoyage
+## Nettoyage
 
 ```powershell
 # Supprimer fichiers obsolètes (interactif)
 python cleanup_project.py
 ```
 
-## 📊 Fichiers Importants à Consulter
+## Fichiers Importants à Consulter
 
 ```powershell
 # Visualisations
-results/comparison_taxi_vs_mountaincar_pbrl.png  # ⭐ LE PLUS IMPORTANT
+results/comparison_taxi_vs_mountaincar_pbrl.png  # LE PLUS IMPORTANT
 results/comparison_classical_vs_pbrl.png         # Taxi
 results/comparison_mountaincar_classical_vs_pbrl.png  # MountainCar
 
@@ -58,24 +59,24 @@ results/mountaincar_pbrl_comparison.json         # Données MC
 
 # Documentation
 README.md                                        # Vue d'ensemble
-GUIDE_UTILISATION.md                             # Guide complet ⭐
+GUIDE_UTILISATION.md                             # Guide complet
 MOUNTAINCAR_RESULTS_FINAL.md                     # Analyse MC détaillée
 RECAPITULATIF_FINAL.md                           # Ce que vous lisez
 ```
 
-## 🎯 Résultats Attendus
+## Résultats Attendus
 
 ### Taxi-v3
 - **PBRL** : 2,000 épisodes → 7.77 ± 2.59
 - **Classical** : 15,000 épisodes → 7.82 ± 2.60
-- **Réduction** : **-87%** d'épisodes ✅
+- **Réduction** : **-87%** d'épisodes
 
 ### MountainCar-v0
 - **PBRL** : 6,000 épisodes → -165.19 ± 19.94 (77% succès)
 - **Classical** : 10,000 épisodes → -153.53 ± 3.76 (100% succès)
-- **Réduction** : **-40%** d'épisodes ✅
+- **Réduction** : **-40%** d'épisodes
 
-## 🐛 Dépannage Rapide
+## Dépannage Rapide
 
 ```powershell
 # Erreur de module
@@ -85,13 +86,13 @@ pip install gymnasium numpy matplotlib
 cd taxi-pbrl-project
 ```
 
-## 📞 Documentation
+## Documentation
 
 - **README.md** - Vue d'ensemble
-- **GUIDE_UTILISATION.md** - Guide complet (⭐ COMMENCER ICI)
+- **GUIDE_UTILISATION.md** - Guide complet (COMMENCER ICI)
 - **RECAPITULATIF_FINAL.md** - Résumé et conseils rapport
 
 ---
 
 **Temps total** : 30 minutes (workflow complet)  
-**Résultat** : PBRL réduit les épisodes de 40% à 87% ! 🚀
+**Résultat** : PBRL réduit les épisodes de 40% à 87% !
