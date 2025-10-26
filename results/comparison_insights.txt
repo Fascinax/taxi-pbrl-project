@@ -5,43 +5,43 @@
 
 📊 EFFICACITÉ D'APPRENTISSAGE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Taxi-v3:       10,000 épisodes (-33% vs Classical)
+  Taxi-v3:       2,000 épisodes (-87% vs Classical)
   MountainCar:   6,000 épisodes (-40% vs Classical)
   
-  🏆 Meilleur: MountainCar avec 40% de réduction
+  🏆 Meilleur: Taxi avec 87% de réduction
 
 🎯 PERFORMANCE FINALE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Taxi-v3:       7.76 ± 2.40
-  MountainCar:   -165.19 ± 19.94
+  Taxi-v3:       8.12 ± 2.51
+  MountainCar:   -160.98 ± 10.06
   
   💡 Note: Échelles différentes (Taxi: positif, MC: négatif)
 
 📉 STABILITÉ (Écart-type)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Taxi-v3:       2.40 (-2% vs Classical)
-  MountainCar:   19.94 (-430% vs Classical)
+  Taxi-v3:       2.51 (+8% vs Classical)
+  MountainCar:   10.06 (+43% vs Classical)
   
   🏆 Plus stable: Taxi
-  🏆 Meilleure réduction: Taxi (-2%)
+  🏆 Meilleure réduction: MountainCar (43%)
 
 ✅ TAUX DE SUCCÈS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Taxi-v3:       100%
-  MountainCar:   77%
+  MountainCar:   100%
   
   ✨ Les deux agents atteignent des performances optimales !
 
 ⚡ INSIGHTS CLÉS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  1. 🥇 MountainCar montre une MEILLEURE efficacité d'apprentissage
-     → Réduction de 40% des épisodes vs 33% pour Taxi
-     → Sparse rewards amplifient l'impact des préférences
+  1. 🥇 Taxi-v3 montre une MEILLEURE efficacité d'apprentissage
+     → Réduction de 87% des épisodes vs 40% pour MC
+     → Environnement plus favorable aux préférences
 
-  2. 🎯 Taxi bénéficie PLUS de la stabilité du PBRL
-     → Variance réduite de -2% vs -430% pour MC
-     → Les préférences homogénéisent les politiques
+  2. 🎯 MountainCar bénéficie PLUS de la stabilité du PBRL
+     → Variance réduite de 43% vs 8% pour Taxi
+     → Les préférences lissent fortement le comportement
 
   3. 💪 Les deux agents atteignent 100% de succès
      → PBRL ne sacrifie pas la performance finale
@@ -58,8 +58,8 @@
   très différents. L'efficacité d'apprentissage et la stabilité sont 
   systématiquement améliorées, validant l'approche pour diverses applications.
   
-  📈 Taxi-v3:       Excellent pour démontrer l'efficacité (-33% épisodes)
-  🏔️  MountainCar:  Excellent pour démontrer la stabilité (--430% variance)
+  📈 Taxi-v3:       Excellent pour démontrer l'efficacité (-87% épisodes)
+  🏔️  MountainCar:  Excellent pour démontrer la stabilité (-43% variance)
   
   🚀 Ensemble, ils prouvent la VALEUR du PBRL dans le RL moderne !
 
