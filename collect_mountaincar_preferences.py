@@ -98,43 +98,43 @@ def display_mountaincar_comparison(traj_a: MountainCarTrajectory, traj_b: Mounta
         traj_b: Deuxième trajectoire
     """
     print(f"\n{'='*80}")
-    print("🔍 COMPARAISON DES TRAJECTOIRES MOUNTAINCAR")
+    print("[START] COMPARAISON DES TRAJECTOIRES MOUNTAINCAR")
     print(f"{'='*80}\n")
     
     # Trajectoire A
-    print(f"📍 TRAJECTOIRE A (Épisode {traj_a.episode_id})")
+    print(f"[TRAJ A] TRAJECTOIRE A (Épisode {traj_a.episode_id})")
     print("-" * 80)
     print(f"  Récompense totale:     {traj_a.total_reward:7.2f}")
     print(f"  Nombre de pas:         {traj_a.episode_length:3d}")
-    print(f"  Position maximale:     {traj_a.max_position:6.3f} {'✅ But atteint!' if traj_a.success else '❌ Échec'}")
+    print(f"  Position maximale:     {traj_a.max_position:6.3f} {'[OK] But atteint!' if traj_a.success else '[ERROR] Échec'}")
     print(f"  Vitesse maximale:      {traj_a.max_velocity:6.3f}")
     print(f"  Efficacité (reward/pas): {traj_a.total_reward / traj_a.episode_length:6.3f}")
     
     if traj_a.success:
-        print(f"  🎯 Succès en {traj_a.episode_length} pas!")
+        print(f"  [SUCCESS] Succès en {traj_a.episode_length} pas!")
     else:
-        print(f"  ⚠️  N'a atteint que position {traj_a.max_position:.3f}")
+        print(f"  [WARN]  N'a atteint que position {traj_a.max_position:.3f}")
     
     print()
     
     # Trajectoire B
-    print(f"📍 TRAJECTOIRE B (Épisode {traj_b.episode_id})")
+    print(f"[TRAJ B] TRAJECTOIRE B (Épisode {traj_b.episode_id})")
     print("-" * 80)
     print(f"  Récompense totale:     {traj_b.total_reward:7.2f}")
     print(f"  Nombre de pas:         {traj_b.episode_length:3d}")
-    print(f"  Position maximale:     {traj_b.max_position:6.3f} {'✅ But atteint!' if traj_b.success else '❌ Échec'}")
+    print(f"  Position maximale:     {traj_b.max_position:6.3f} {'[OK] But atteint!' if traj_b.success else '[ERROR] Échec'}")
     print(f"  Vitesse maximale:      {traj_b.max_velocity:6.3f}")
     print(f"  Efficacité (reward/pas): {traj_b.total_reward / traj_b.episode_length:6.3f}")
     
     if traj_b.success:
-        print(f"  🎯 Succès en {traj_b.episode_length} pas!")
+        print(f"  [SUCCESS] Succès en {traj_b.episode_length} pas!")
     else:
-        print(f"  ⚠️  N'a atteint que position {traj_b.max_position:.3f}")
+        print(f"  [WARN]  N'a atteint que position {traj_b.max_position:.3f}")
     
     print()
     
     # Comparaison
-    print(f"⚖️  COMPARAISON")
+    print(f"[COMPARE]  COMPARAISON")
     print("-" * 80)
     
     reward_diff = traj_a.total_reward - traj_b.total_reward
@@ -183,7 +183,7 @@ def select_interesting_trajectory_pairs(trajectories: List[MountainCarTrajectory
     successes = [t for t in trajectories if t.success]
     failures = [t for t in trajectories if not t.success]
     
-    print(f"\n📊 Sélection de {n_pairs} paires intéressantes...")
+    print(f"\n[SELECT] Sélection de {n_pairs} paires intéressantes...")
     print(f"   Trajectoires réussies: {len(successes)}")
     print(f"   Trajectoires échouées: {len(failures)}")
     
@@ -216,7 +216,7 @@ def select_interesting_trajectory_pairs(trajectories: List[MountainCarTrajectory
         if idx_a != idx_b:
             pairs.append((trajectories[idx_a], trajectories[idx_b]))
     
-    print(f"✅ {len(pairs)} paires sélectionnées\n")
+    print(f"[OK] {len(pairs)} paires sélectionnées\n")
     return pairs[:n_pairs]
 
 
@@ -224,7 +224,7 @@ def main():
     """Script principal de collecte de préférences"""
     
     print(f"\n{'='*80}")
-    print("🎯 COLLECTE DE PRÉFÉRENCES - MOUNTAINCAR-V0")
+    print("[START] COLLECTE DE PRÉFÉRENCES - MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
     # Configuration
@@ -238,22 +238,22 @@ def main():
     agent_path = os.path.join(results_dir, "mountain_car_agent_classical.pkl")
     
     if not os.path.exists(agent_path):
-        print(f"❌ Agent non trouvé: {agent_path}")
-        print("💡 Exécutez d'abord: python train_mountaincar_classical.py")
+        print(f"[ERROR] Agent non trouvé: {agent_path}")
+        print("[INFO] Exécutez d'abord: python train_mountaincar_classical.py")
         return
     
-    print(f"📂 Chargement de l'agent: {agent_path}")
+    print(f"[LOAD] Chargement de l'agent: {agent_path}")
     agent = MountainCarAgent()
     agent.load_agent(agent_path)
-    print("✅ Agent chargé\n")
+    print("[OK] Agent chargé\n")
     
     # Création de l'environnement
-    print("🌍 Création de l'environnement MountainCar-v0...")
+    print("[ENV] Création de l'environnement MountainCar-v0...")
     env = gym.make('MountainCar-v0')
-    print("✅ Environnement créé\n")
+    print("[OK] Environnement créé\n")
     
     # Génération de trajectoires
-    print(f"🎬 GÉNÉRATION DE {N_TRAJECTORIES} TRAJECTOIRES")
+    print(f"[ACTION] GÉNÉRATION DE {N_TRAJECTORIES} TRAJECTOIRES")
     print("-" * 80)
     
     trajectories = []
@@ -267,14 +267,14 @@ def main():
                   f"Succès: {successes}/{i + 1} ({successes/(i+1)*100:.1f}%)")
     
     total_successes = sum(1 for t in trajectories if t.success)
-    print(f"\n✅ {N_TRAJECTORIES} trajectoires générées")
+    print(f"\n[OK] {N_TRAJECTORIES} trajectoires générées")
     print(f"   Taux de succès: {total_successes}/{N_TRAJECTORIES} ({total_successes/N_TRAJECTORIES*100:.1f}%)\n")
     
     # Sélection de paires intéressantes
     pairs = select_interesting_trajectory_pairs(trajectories, n_pairs=N_PREFERENCES)
     
     # Collecte des préférences
-    print(f"👤 COLLECTE DE {len(pairs)} PRÉFÉRENCES")
+    print(f"[USER] COLLECTE DE {len(pairs)} PRÉFÉRENCES")
     print(f"{'='*80}")
     print("Instructions:")
     print("  1 ou A : Préférer la trajectoire A")
@@ -298,22 +298,22 @@ def main():
             choice = input("Votre choix (1/A, 2/B, 0/E, Q pour quitter): ").strip().upper()
             
             if choice in ['Q', 'QUIT']:
-                print("\n⚠️  Arrêt de la collecte...")
+                print("\n[WARN]  Arrêt de la collecte...")
                 break
             elif choice in ['1', 'A']:
                 preference_choice = 1
-                print("✅ Vous avez choisi: Trajectoire A\n")
+                print("[OK] Vous avez choisi: Trajectoire A\n")
                 break
             elif choice in ['2', 'B']:
                 preference_choice = 2
-                print("✅ Vous avez choisi: Trajectoire B\n")
+                print("[OK] Vous avez choisi: Trajectoire B\n")
                 break
             elif choice in ['0', 'E']:
                 preference_choice = 0
-                print("✅ Vous avez choisi: Égalité\n")
+                print("[OK] Vous avez choisi: Égalité\n")
                 break
             else:
-                print("❌ Choix invalide. Utilisez 1/A, 2/B, 0/E, ou Q")
+                print("[ERROR] Choix invalide. Utilisez 1/A, 2/B, 0/E, ou Q")
         
         if choice in ['Q', 'QUIT']:
             break
@@ -342,7 +342,7 @@ def main():
             temp_path = os.path.join(results_dir, f"mountaincar_preferences_temp.json")
             with open(temp_path, 'w') as f:
                 json.dump(preferences, f, indent=2)
-            print(f"💾 Sauvegarde intermédiaire: {len(preferences)} préférences")
+            print(f"[SAVE] Sauvegarde intermédiaire: {len(preferences)} préférences")
     
     env.close()
     
@@ -352,17 +352,17 @@ def main():
         preferences_path = os.path.join(results_dir, "mountaincar_preferences.json")
         with open(preferences_path, 'w') as f:
             json.dump(preferences, f, indent=2)
-        print(f"\n💾 Préférences sauvegardées: {preferences_path}")
+        print(f"\n[SAVE] Préférences sauvegardées: {preferences_path}")
         
         # Sauvegarde des trajectoires
         trajectories_path = os.path.join(results_dir, "mountaincar_trajectories.pkl")
         with open(trajectories_path, 'wb') as f:
             pickle.dump(trajectories, f)
-        print(f"💾 Trajectoires sauvegardées: {trajectories_path}")
+        print(f"[SAVE] Trajectoires sauvegardées: {trajectories_path}")
         
         # Statistiques
         print(f"\n{'='*80}")
-        print("📊 STATISTIQUES DES PRÉFÉRENCES")
+        print("[PLOT] STATISTIQUES DES PRÉFÉRENCES")
         print(f"{'='*80}")
         print(f"Total préférences collectées: {len(preferences)}")
         
@@ -375,10 +375,10 @@ def main():
         print(f"  Égalité: {choices_equal} ({choices_equal/len(preferences)*100:.1f}%)")
         print(f"{'='*80}\n")
         
-        print("✅ Prochaine étape:")
+        print("[OK] Prochaine étape:")
         print("   python train_mountaincar_pbrl.py")
     else:
-        print("\n⚠️  Aucune préférence collectée")
+        print("\n[WARN]  Aucune préférence collectée")
 
 
 if __name__ == "__main__":

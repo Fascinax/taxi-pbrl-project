@@ -27,7 +27,7 @@ class PreferenceInterface:
             int: Choix de l'utilisateur (1 pour traj1, 2 pour traj2, 0 pour égalité)
         """
         print("\n" + "="*100)
-        print("🤖 SYSTÈME DE PRÉFÉRENCES - ÉVALUATION DE TRAJECTOIRES")
+        print("[AGENT] SYSTÈME DE PRÉFÉRENCES - ÉVALUATION DE TRAJECTOIRES")
         print("="*100)
         
         # Affichage de la comparaison
@@ -36,13 +36,13 @@ class PreferenceInterface:
         # Demande de préférence
         print("\n" + "🔥 VOTRE CHOIX:")
         print("Quelle trajectoire préférez-vous ?")
-        print("💡 Critères à considérer: efficacité, récompense, style de navigation, succès...")
+        print("[INFO] Critères à considérer: efficacité, récompense, style de navigation, succès...")
         print("")
-        print("1️⃣  - Je préfère la TRAJECTOIRE A")
-        print("2️⃣  - Je préfère la TRAJECTOIRE B") 
-        print("0️⃣  - Les deux sont équivalentes (égalité)")
+        print("1  - Je préfère la TRAJECTOIRE A")
+        print("2  - Je préfère la TRAJECTOIRE B") 
+        print("0  - Les deux sont équivalentes (égalité)")
         print("🆘 - Tapez 'help' pour plus d'informations")
-        print("🎯 - Tapez 'viz' pour voir la visualisation graphique")
+        print("[TARGET] - Tapez 'viz' pour voir la visualisation graphique")
         print("")
         
         while True:
@@ -68,16 +68,16 @@ class PreferenceInterface:
                     
                     # Confirmation
                     choice_names = {1: "Trajectoire A", 2: "Trajectoire B", 0: "Égalité"}
-                    print(f"\n✅ Préférence enregistrée: {choice_names[choice_int]}")
+                    print(f"\n[OK] Préférence enregistrée: {choice_names[choice_int]}")
                     if reasoning != "Aucune justification fournie":
                         print(f"📝 Justification: {reasoning}")
                     
                     return choice_int
                 else:
-                    print("❌ Choix invalide. Utilisez 1, 2, 0, 'help' ou 'viz'")
+                    print("[ERROR] Choix invalide. Utilisez 1, 2, 0, 'help' ou 'viz'")
                     
             except (ValueError, KeyboardInterrupt):
-                print("❌ Entrée invalide ou interruption. Réessayez.")
+                print("[ERROR] Entrée invalide ou interruption. Réessayez.")
     
     def collect_preference_batch(self, trajectory_pairs: List[Tuple[Trajectory, Trajectory]], 
                                trajectory_manager: TrajectoryManager) -> List[int]:
@@ -94,16 +94,16 @@ class PreferenceInterface:
         preferences = []
         total_pairs = len(trajectory_pairs)
         
-        print(f"\n🎯 SESSION DE PRÉFÉRENCES: {total_pairs} comparaisons à effectuer")
+        print(f"\n[TARGET] SESSION DE PRÉFÉRENCES: {total_pairs} comparaisons à effectuer")
         
         for i, (traj1, traj2) in enumerate(trajectory_pairs):
-            print(f"\n📊 Comparaison {i+1}/{total_pairs}")
+            print(f"\n[PLOT] Comparaison {i+1}/{total_pairs}")
             preference = self.collect_preference_interactive(traj1, traj2, trajectory_manager)
             preferences.append(preference)
             
             # Demande de continuation pour les sessions longues
             if i < total_pairs - 1 and (i + 1) % 5 == 0:
-                continue_choice = input(f"\n⏸️  Pause après {i+1} comparaisons. Continuer ? (y/n): ").strip().lower()
+                continue_choice = input(f"\n[PAUSE]  Pause après {i+1} comparaisons. Continuer ? (y/n): ").strip().lower()
                 if continue_choice in ['n', 'non', 'no']:
                     print(f"🛑 Session interrompue. {i+1} préférences collectées.")
                     break
@@ -115,17 +115,17 @@ class PreferenceInterface:
         """Affiche l'aide pour le système de préférences"""
         print("\n" + "🆘 AIDE - SYSTÈME DE PRÉFÉRENCES")
         print("-" * 50)
-        print("🎯 OBJECTIF: Vous aidez l'agent à apprendre vos préférences")
+        print("[TARGET] OBJECTIF: Vous aidez l'agent à apprendre vos préférences")
         print("   en comparant différentes façons de résoudre la tâche Taxi.")
         print("")
-        print("📊 CRITÈRES DE COMPARAISON:")
+        print("[PLOT] CRITÈRES DE COMPARAISON:")
         print("   • Récompense totale: Plus élevée = mieux")
         print("   • Efficacité: Récompense/pas de temps")
         print("   • Longueur épisode: Plus court peut être mieux (mais pas toujours)")
         print("   • Style de navigation: Certains préfèrent des trajets directs")
         print("   • Succès: L'agent a-t-il réussi la tâche ?")
         print("")
-        print("💡 CONSEILS:")
+        print("[INFO] CONSEILS:")
         print("   • Suivez votre intuition sur ce qui vous semble 'mieux'")
         print("   • Vous pouvez valoriser la sécurité, la vitesse, l'élégance...")
         print("   • Les égalités (0) sont acceptables si vraiment équivalent")
@@ -177,7 +177,7 @@ class PreferenceInterface:
         for choice in preferences:
             choice_counts[choice] += 1
         
-        print(f"\n📋 RÉSUMÉ DE SESSION:")
+        print(f"\n[LIST] RÉSUMÉ DE SESSION:")
         print(f"   • Comparaisons complétées: {completed}/{total_pairs}")
         print(f"   • Préférences Trajectoire A: {choice_counts[1]}")
         print(f"   • Préférences Trajectoire B: {choice_counts[2]}")
@@ -278,14 +278,14 @@ class PreferenceInterface:
             return
         
         print("\n" + "="*60)
-        print("📊 RÉSUMÉ DES PRÉFÉRENCES COLLECTÉES")
+        print("[PLOT] RÉSUMÉ DES PRÉFÉRENCES COLLECTÉES")
         print("="*60)
         print(f"Total de préférences: {stats['total_preferences']}")
         print(f"Trajectoire A préférée: {stats['choice_distribution']['trajectory_a']} fois ({stats['choice_percentages']['trajectory_a']:.1f}%)")
         print(f"Trajectoire B préférée: {stats['choice_distribution']['trajectory_b']} fois ({stats['choice_percentages']['trajectory_b']:.1f}%)")
         print(f"Égalités déclarées: {stats['choice_distribution']['equal']} fois ({stats['choice_percentages']['equal']:.1f}%)")
         
-        print(f"\n🎯 TENDANCES DÉTECTÉES:")
+        print(f"\n[TARGET] TENDANCES DÉTECTÉES:")
         print(f"Préférence pour récompenses élevées: {stats['reward_preference_tendency']:.1f}%")
         print(f"Préférence pour efficacité élevée: {stats['efficiency_preference_tendency']:.1f}%")
         print("="*60)

@@ -45,7 +45,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
         self.preference_updates = 0
         self.preference_learning_history = []
         
-        print(f"🎯 MountainCarPbRLAgent initialisé:")
+        print(f"[TARGET] MountainCarPbRLAgent initialisé:")
         print(f"   - Preference weight: {preference_weight}")
     
     def update_from_preferences(self, 
@@ -54,15 +54,16 @@ class MountainCarPbRLAgent(MountainCarAgent):
                                preference_strength: float = 1.0):
         """
         Met à jour la Q-table en fonction d'une préférence entre deux trajectoires
+        OPTIMISÉ: Bonus/malus plus importants et ciblés
         
         Args:
             preferred_trajectory: Trajectoire préférée
             less_preferred_trajectory: Trajectoire moins préférée
             preference_strength: Force de la préférence
         """
-        # Calcul du bonus/malus
-        reward_bonus = preference_strength * self.preference_weight
-        reward_penalty = -preference_strength * self.preference_weight * 0.5
+        # Calcul du bonus/malus AUGMENTÉS
+        reward_bonus = preference_strength * self.preference_weight * 2.0  # x2 pour impact plus fort
+        reward_penalty = -preference_strength * self.preference_weight * 0.8  # Pénalité modérée
         
         # Mise à jour des trajectoires
         self._update_trajectory_values(preferred_trajectory, reward_bonus, is_preferred=True)
@@ -84,6 +85,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
                                  is_preferred: bool):
         """
         Met à jour les valeurs Q pour toutes les transitions d'une trajectoire
+        OPTIMISÉ: Pondération adaptative selon la position dans la trajectoire
         
         Args:
             trajectory: Trajectoire à mettre à jour
@@ -91,8 +93,17 @@ class MountainCarPbRLAgent(MountainCarAgent):
             is_preferred: True si trajectoire préférée
         """
         for i, step in enumerate(trajectory.steps):
-            # Position weight: les premières actions sont plus importantes
-            position_weight = 1.0 - (i / len(trajectory.steps)) * 0.3
+            # Position weight OPTIMISÉ: emphase sur début et fin
+            progress = i / max(len(trajectory.steps), 1)
+            
+            # Bonus pour les premières actions (critiques) et actions finales (résultat)
+            if progress < 0.3:  # Début crucial
+                position_weight = 1.5
+            elif progress > 0.7:  # Fin importante
+                position_weight = 1.3
+            else:  # Milieu
+                position_weight = 1.0
+            
             final_reward = (step.reward + reward_modifier) * position_weight
             
             # Récupération des états continus stockés dans les attributs custom
@@ -119,8 +130,8 @@ class MountainCarPbRLAgent(MountainCarAgent):
             else:
                 target = final_reward + self.gamma * np.max(self.q_table[discrete_next_state])
             
-            # Mise à jour avec learning rate réduit pour les préférences
-            preference_lr = self.lr * 0.5
+            # Mise à jour avec learning rate OPTIMISÉ
+            preference_lr = self.lr * 0.7  # Augmenté de 0.5 à 0.7
             self.q_table[discrete_state, step.action] += preference_lr * \
                 (target - self.q_table[discrete_state, step.action])
     
@@ -144,7 +155,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
         episode_rewards = []
         
         print(f"\n{'='*80}")
-        print(f"🎯 ENTRAÎNEMENT PBRL MOUNTAINCAR")
+        print(f"[TARGET] ENTRAÎNEMENT PBRL MOUNTAINCAR")
         print(f"{'='*80}")
         print(f"Épisodes: {episodes}")
         print(f"Préférences: {len(preferences)}")
@@ -197,7 +208,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
         self.training_rewards = episode_rewards
         
         print(f"\n{'='*80}")
-        print("✅ ENTRAÎNEMENT PBRL TERMINÉ")
+        print("[OK] ENTRAÎNEMENT PBRL TERMINÉ")
         print(f"{'='*80}")
         print(f"Récompense moyenne finale: {np.mean(episode_rewards[-100:]):.2f}")
         print(f"Taux de succès: {(success_count / episodes) * 100:.1f}%")
@@ -247,7 +258,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
             self.update_from_preferences(preferred, less_preferred, strength)
             applied += 1
         
-        print(f"✅ {applied} préférences appliquées (sur {len(preferences)})")
+        print(f"[OK] {applied} préférences appliquées (sur {len(preferences)})")
     
     def get_preference_learning_summary(self) -> Dict[str, Any]:
         """Retourne un résumé de l'apprentissage par préférences"""
@@ -290,7 +301,7 @@ class MountainCarPbRLAgent(MountainCarAgent):
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, 'wb') as f:
             pickle.dump(save_data, f)
-        print(f"💾 Agent PbRL sauvegardé: {filepath}")
+        print(f"[SAVE] Agent PbRL sauvegardé: {filepath}")
 
 
 def test_pbrl_agent():
@@ -313,11 +324,11 @@ def test_pbrl_agent():
     agent.train(env, episodes=1000, verbose=True)
     
     # Évaluation
-    print("\n📊 Évaluation...")
+    print("\n[PLOT] Évaluation...")
     agent.evaluate(env, episodes=50, verbose=True)
     
     env.close()
-    print("✅ Test terminé!")
+    print("[OK] Test terminé!")
 
 
 if __name__ == "__main__":

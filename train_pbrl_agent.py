@@ -29,15 +29,15 @@ def main():
     trajectory_manager = TrajectoryManager()
     preference_interface = PreferenceInterface()
     
-    print("\n1️⃣ Chargement des données existantes...")
+    print("\n[1] Chargement des données existantes...")
     
     # Chargement de l'agent classique pour comparaison
     classical_agent = QLearningAgent(n_states, n_actions)
     try:
         classical_agent.load_agent(f"{results_dir}/q_learning_agent_classical.pkl")
-        print("✅ Agent classique chargé")
+        print("[OK] Agent classique chargé")
     except FileNotFoundError:
-        print("❌ Agent classique non trouvé. Entraînement d'abord...")
+        print("[ERROR] Agent classique non trouvé. Entraînement d'abord...")
         return
     
     # Chargement des trajectoires de démonstration si disponibles
@@ -47,19 +47,19 @@ def main():
     try:
         trajectory_manager.load_trajectories(f"{results_dir}/demo_trajectories.pkl")
         demo_trajectories = trajectory_manager.trajectories
-        print(f"✅ {len(demo_trajectories)} trajectoires de démo chargées")
+        print(f"[OK] {len(demo_trajectories)} trajectoires de démo chargées")
     except FileNotFoundError:
-        print("⚠️ Pas de trajectoires de démo trouvées")
+        print("[WARN] Pas de trajectoires de démo trouvées")
     
     try:
         with open(f"{results_dir}/demo_preferences.json", 'r') as f:
             pref_data = json.load(f)
             demo_preferences = pref_data['preferences']
-        print(f"✅ {len(demo_preferences)} préférences de démo chargées")
+        print(f"[OK] {len(demo_preferences)} préférences de démo chargées")
     except FileNotFoundError:
-        print("⚠️ Pas de préférences de démo trouvées")
+        print("[WARN] Pas de préférences de démo trouvées")
     
-    print("\n2️⃣ Création et configuration de l'agent PbRL...")
+    print("\n[2] Création et configuration de l'agent PbRL...")
     
     # Création de l'agent PbRL
     pbrl_agent = PreferenceBasedQLearning(
@@ -73,10 +73,10 @@ def main():
         preference_weight=0.3  # Poids modéré pour les préférences
     )
     
-    print("✅ Agent PbRL créé")
+    print("[OK] Agent PbRL créé")
     
     # Choix du mode d'entraînement
-    print("\n3️⃣ Sélection du mode d'entraînement...")
+    print("\n3 Sélection du mode d'entraînement...")
     print("Choisissez le mode d'entraînement:")
     print("1 - Entraînement avec préférences existantes seulement")
     print("2 - Entraînement interactif (avec collecte de nouvelles préférences)")
@@ -86,10 +86,10 @@ def main():
     
     if mode == "1":
         # Mode 1: Utiliser seulement les préférences existantes
-        print("\n🎯 MODE 1: Entraînement avec préférences existantes")
+        print("\n[MODE 1] Entraînement avec préférences existantes")
         
         if not demo_preferences or not demo_trajectories:
-            print("❌ Pas assez de données de préférences. Génération de trajectoires...")
+            print("[ERROR] Pas assez de données de préférences. Génération de trajectoires...")
             # Générer quelques trajectoires avec l'agent classique
             print("Génération de 20 trajectoires avec l'agent classique...")
             for i in range(20):
@@ -134,7 +134,7 @@ def main():
         
     elif mode == "2":
         # Mode 2: Entraînement interactif
-        print("\n🎯 MODE 2: Entraînement interactif avec nouvelles préférences")
+        print("\n[MODE 2] Entraînement interactif avec nouvelles préférences")
         
         pbrl_rewards, iteration_summaries = pbrl_agent.interactive_training_loop(
             env, preference_interface, trajectory_manager,
@@ -145,11 +145,11 @@ def main():
         
     else:
         # Mode 3: Entraînement standard (pour comparaison)
-        print("\n🎯 MODE 3: Entraînement standard (sans préférences)")
+        print("\n[MODE 3] Entraînement standard (sans préférences)")
         
         pbrl_rewards = pbrl_agent.train(env, episodes=10000)
     
-    print("\n4️⃣ Évaluation et comparaison des agents...")
+    print("\n4 Évaluation et comparaison des agents...")
     
     # Évaluation des deux agents
     print("Évaluation de l'agent classique...")
@@ -161,7 +161,7 @@ def main():
     # Sauvegarde de l'agent PbRL
     pbrl_agent.save_pbrl_agent(f"{results_dir}/pbrl_agent.pkl")
     
-    print("\n5️⃣ Génération des analyses et comparaisons...")
+    print("\n5 Génération des analyses et comparaisons...")
     
     # Comparaison des performances
     create_comparison_analysis(classical_agent, pbrl_agent, classical_eval, pbrl_eval, results_dir)
@@ -169,26 +169,26 @@ def main():
     # Analyse de l'apprentissage par préférences si applicable
     if mode in ["1", "2"]:
         preference_summary = pbrl_agent.get_preference_learning_summary()
-        print(f"\n📊 RÉSUMÉ DE L'APPRENTISSAGE PAR PRÉFÉRENCES:")
+        print(f"\n[SUMMARY] RÉSUMÉ DE L'APPRENTISSAGE PAR PRÉFÉRENCES:")
         print(f"   Mises à jour par préférences: {preference_summary.get('total_preference_updates', 0)}")
         print(f"   Poids des préférences utilisé: {preference_summary.get('preference_weight_used', 0)}")
     
     # Résumé final
     print("\n" + "="*80)
-    print("🎉 COMPARAISON AGENT CLASSIQUE vs AGENT PbRL")
+    print("[DONE] COMPARAISON AGENT CLASSIQUE vs AGENT PbRL")
     print("="*80)
     print(f"Agent Classique - Récompense moyenne: {classical_avg:.2f}")
     print(f"Agent PbRL      - Récompense moyenne: {pbrl_avg:.2f}")
     
     improvement = ((pbrl_avg - classical_avg) / abs(classical_avg)) * 100 if classical_avg != 0 else 0
     if improvement > 0:
-        print(f"🚀 Amélioration PbRL: +{improvement:.1f}%")
+        print(f"[START] Amélioration PbRL: +{improvement:.1f}%")
     elif improvement < 0:
-        print(f"📉 Dégradation PbRL: {improvement:.1f}%")
+        print(f"[DOWN] Dégradation PbRL: {improvement:.1f}%")
     else:
-        print("📊 Performance équivalente")
+        print("[PLOT] Performance équivalente")
     
-    print(f"\n📁 Tous les résultats sauvegardés dans '{results_dir}/'")
+    print(f"\n[FILES] Tous les résultats sauvegardés dans '{results_dir}/'")
 
 def create_comparison_analysis(classical_agent, pbrl_agent, classical_eval, pbrl_eval, results_dir):
     """Crée une analyse comparative complète"""
@@ -272,7 +272,7 @@ def create_comparison_analysis(classical_agent, pbrl_agent, classical_eval, pbrl
     
     plt.tight_layout()
     plt.savefig(f"{results_dir}/comparison_classical_vs_pbrl.png", dpi=300, bbox_inches='tight')
-    print(f"📊 Graphique de comparaison sauvegardé: {results_dir}/comparison_classical_vs_pbrl.png")
+    print(f"[PLOT] Graphique de comparaison sauvegardé: {results_dir}/comparison_classical_vs_pbrl.png")
     plt.show()
     
     # Sauvegarde des statistiques détaillées
@@ -297,7 +297,7 @@ def create_comparison_analysis(classical_agent, pbrl_agent, classical_eval, pbrl
     
     with open(f"{results_dir}/detailed_comparison.json", 'w') as f:
         json.dump(comparison_data, f, indent=2)
-    print(f"📋 Analyse détaillée sauvegardée: {results_dir}/detailed_comparison.json")
+    print(f"[LIST] Analyse détaillée sauvegardée: {results_dir}/detailed_comparison.json")
 
 if __name__ == "__main__":
     main()

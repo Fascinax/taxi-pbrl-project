@@ -202,7 +202,7 @@ class PreferenceBasedQLearning(QLearningAgent):
             # Appliquer la préférence
             self.update_from_preferences(preferred, less_preferred, strength)
         
-        print(f"✅ {len([p for p in preferences if p['choice'] != 0])} préférences appliquées")
+        print(f"[OK] {len([p for p in preferences if p['choice'] != 0])} préférences appliquées")
     
     def interactive_training_loop(self, env, preference_interface: PreferenceInterface,
                                 trajectory_manager, episodes_per_iteration: int = 1000,
@@ -219,41 +219,41 @@ class PreferenceBasedQLearning(QLearningAgent):
             trajectories_per_comparison: Nombre de trajectoires à générer pour comparaison
         """
         
-        print(f"🚀 ENTRAÎNEMENT INTERACTIF PbRL")
+        print(f"[START] ENTRAÎNEMENT INTERACTIF PbRL")
         print(f"Paramètres: {max_iterations} itérations, {episodes_per_iteration} épisodes/itération")
         
         all_rewards = []
         iteration_summaries = []
         
         for iteration in range(max_iterations):
-            print(f"\n🔄 ITÉRATION {iteration + 1}/{max_iterations}")
+            print(f"\n[ITER] ITÉRATION {iteration + 1}/{max_iterations}")
             
             # 1. Entraînement standard
-            print(f"1️⃣ Entraînement standard ({episodes_per_iteration} épisodes)...")
+            print(f"1 Entraînement standard ({episodes_per_iteration} épisodes)...")
             iteration_rewards = self.train(env, episodes=episodes_per_iteration)
             all_rewards.extend(iteration_rewards)
             
             # 2. Génération de trajectoires pour comparaison
-            print(f"2️⃣ Génération de {trajectories_per_comparison} trajectoires de test...")
+            print(f"2 Génération de {trajectories_per_comparison} trajectoires de test...")
             test_trajectories = []
             for i in range(trajectories_per_comparison):
                 traj = trajectory_manager.collect_trajectory(env, self, render=False)
                 test_trajectories.append(traj)
             
             # 3. Sélection de paires intéressantes
-            print("3️⃣ Sélection de paires pour comparaison...")
+            print("3 Sélection de paires pour comparaison...")
             pairs = self._select_interesting_pairs(test_trajectories)
             
             if not pairs:
-                print("⚠️ Aucune paire intéressante trouvée, passage à l'itération suivante")
+                print("[WARN] Aucune paire intéressante trouvée, passage à l'itération suivante")
                 continue
             
             # 4. Collecte de préférences
-            print(f"4️⃣ Collecte de préférences ({len(pairs)} comparaisons)...")
+            print(f"4 Collecte de préférences ({len(pairs)} comparaisons)...")
             preferences = preference_interface.collect_preference_batch(pairs, trajectory_manager)
             
             # 5. Application des nouvelles préférences
-            print("5️⃣ Application des nouvelles préférences...")
+            print("5 Application des nouvelles préférences...")
             self._apply_new_preferences(pairs, preferences)
             
             # 6. Résumé de l'itération
@@ -265,12 +265,12 @@ class PreferenceBasedQLearning(QLearningAgent):
             }
             iteration_summaries.append(iteration_summary)
             
-            print(f"📊 Résumé itération {iteration + 1}:")
+            print(f"[SUMMARY] Résumé itération {iteration + 1}:")
             print(f"   Récompense moyenne: {iteration_summary['avg_reward']:.2f}")
             print(f"   Préférences collectées: {iteration_summary['preferences_collected']}")
             
         # Résumé final
-        print(f"\n🎉 ENTRAÎNEMENT INTERACTIF TERMINÉ")
+        print(f"\n[DONE] ENTRAÎNEMENT INTERACTIF TERMINÉ")
         print(f"Total des mises à jour par préférences: {self.preference_updates}")
         print(f"Récompense finale moyenne: {np.mean(all_rewards[-100:]):.2f}")
         

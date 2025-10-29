@@ -61,7 +61,7 @@ def plot_training_results(agent: MountainCarAgent, save_path: str = None):
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"📊 Graphique sauvegardé: {save_path}")
+        print(f"[PLOT] Graphique sauvegardé: {save_path}")
     
     plt.close()  # Ferme sans afficher pour éviter l'interruption
 
@@ -111,7 +111,7 @@ def plot_evaluation_results(rewards: list, stats: dict, save_path: str = None):
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"📊 Graphique sauvegardé: {save_path}")
+        print(f"[PLOT] Graphique sauvegardé: {save_path}")
     
     plt.close()  # Ferme sans afficher pour éviter l'interruption
 
@@ -135,7 +135,7 @@ def main():
     results_dir = "results"
     os.makedirs(results_dir, exist_ok=True)
     
-    print("⚙️  CONFIGURATION:")
+    print("[CONFIG]  CONFIGURATION:")
     print(f"   - Épisodes d'entraînement: {TRAIN_EPISODES}")
     print(f"   - Épisodes d'évaluation: {EVAL_EPISODES}")
     print(f"   - Bins position: {N_POSITION_BINS}")
@@ -146,16 +146,16 @@ def main():
     print()
     
     # Création de l'environnement
-    print("🌍 Création de l'environnement MountainCar-v0...")
+    print("[ENV] Création de l'environnement MountainCar-v0...")
     env = gym.make('MountainCar-v0')
-    print("✅ Environnement créé")
+    print("[OK] Environnement créé")
     print(f"   - Espace d'états: Position [-1.2, 0.6], Vitesse [-0.07, 0.07]")
     print(f"   - Actions: 3 (0=gauche, 1=rien, 2=droite)")
     print(f"   - Objectif: Atteindre position >= 0.5")
     print()
     
     # Création de l'agent
-    print("🤖 Création de l'agent Q-Learning avec discrétisation...")
+    print("[AGENT] Création de l'agent Q-Learning avec discrétisation...")
     agent = MountainCarAgent(
         n_position_bins=N_POSITION_BINS,
         n_velocity_bins=N_VELOCITY_BINS,
@@ -168,7 +168,7 @@ def main():
     print()
     
     # Entraînement
-    print(f"🚀 PHASE 1: ENTRAÎNEMENT ({TRAIN_EPISODES} épisodes)")
+    print(f"[START] PHASE 1: ENTRAÎNEMENT ({TRAIN_EPISODES} épisodes)")
     print("-" * 80)
     start_time = datetime.now()
     
@@ -180,11 +180,11 @@ def main():
     )
     
     training_time = (datetime.now() - start_time).total_seconds()
-    print(f"⏱️  Temps d'entraînement: {training_time:.2f} secondes")
+    print(f"[TIME]  Temps d'entraînement: {training_time:.2f} secondes")
     print()
     
     # Évaluation
-    print(f"📊 PHASE 2: ÉVALUATION ({EVAL_EPISODES} épisodes)")
+    print(f"[PLOT] PHASE 2: ÉVALUATION ({EVAL_EPISODES} épisodes)")
     print("-" * 80)
     
     eval_rewards, eval_stats = agent.evaluate(
@@ -195,16 +195,16 @@ def main():
     
     # Sauvegarde de l'agent
     agent_path = os.path.join(results_dir, "mountain_car_agent_classical.pkl")
-    print(f"💾 Sauvegarde de l'agent...")
+    print(f"[SAVE] Sauvegarde de l'agent...")
     agent.save_agent(agent_path)
     
     # Visualisation de la politique apprise
-    print("\n🗺️  POLITIQUE APPRISE")
+    print("\n[MAP]  POLITIQUE APPRISE")
     print("-" * 80)
     agent.visualize_policy()
     
     # Création des graphiques
-    print("📈 CRÉATION DES VISUALISATIONS")
+    print("[CHART] CRÉATION DES VISUALISATIONS")
     print("-" * 80)
     
     # Graphique d'entraînement
@@ -247,11 +247,11 @@ def main():
     results_json_path = os.path.join(results_dir, "mountaincar_classical_results.json")
     with open(results_json_path, 'w') as f:
         json.dump(results_summary, f, indent=2)
-    print(f"💾 Résultats sauvegardés: {results_json_path}")
+    print(f"[SAVE] Résultats sauvegardés: {results_json_path}")
     
     # Résumé final
     print(f"\n{'='*80}")
-    print("🎉 ENTRAÎNEMENT TERMINÉ - RÉSUMÉ")
+    print("[DONE] ENTRAÎNEMENT TERMINÉ - RÉSUMÉ")
     print(f"{'='*80}")
     print(f"Agent: Q-Learning Classique (MountainCar-v0)")
     print(f"Entraînement: {TRAIN_EPISODES} épisodes en {training_time:.2f}s")
@@ -267,7 +267,7 @@ def main():
     print(f"  - Graphique évaluation: {eval_plot_path}")
     print(f"{'='*80}\n")
     
-    print("✅ Prochaines étapes:")
+    print("[OK] Prochaines étapes:")
     print("   1. Exécuter: python demo_mountaincar.py (voir l'agent en action)")
     print("   2. Exécuter: python collect_mountaincar_preferences.py (collecter préférences)")
     print("   3. Exécuter: python train_mountaincar_pbrl.py (entraîner agent PbRL)")
