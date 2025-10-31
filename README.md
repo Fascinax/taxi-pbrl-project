@@ -19,8 +19,19 @@ Projet de comparaison d'agents **PBRL** vs **Classical RL** sur deux environneme
 
 ```powershell
 # Installer les dépendances
-pip install gymnasium numpy matplotlib
+pip install gymnasium numpy matplotlib pygame
 ```
+
+## 🎬 Nouvelle Fonctionnalité : Visualisation Graphique !
+
+Les deux environnements disposent maintenant d'une **visualisation Gymnasium interactive** pour comparer visuellement les trajectoires :
+
+- 🚕 **Taxi-v3** : Voir les déplacements du taxi en temps réel
+- 🏔️ **MountainCar-v0** : Observer l'accumulation d'élan et les oscillations
+
+**Contrôles** : ESPACE (pause), ÉCHAP (passer), replay/text (rejouer/texte)
+
+**Documentation** : `docs/visual_comparison_complete.md`
 
 ## Démarrage Rapide
 
@@ -29,13 +40,26 @@ pip install gymnasium numpy matplotlib
 python compare_taxi_vs_mountaincar.py
 ```
 
-### Option 2 : Démonstration Taxi (2 min)
+### Option 2 : Démonstration Taxi avec Visualisation (2 min)
 ```powershell
-python demo_preferences.py
+python demo_preferences.py  # 🎬 Visualisation automatique !
 python train_pbrl_agent.py
 ```
 
-### Option 3 : Workflow Complet (30 min)
+### Option 3 : MountainCar avec Visualisation
+```powershell
+python train_mountaincar_classical.py
+python collect_mountaincar_preferences.py  # 🎬 Visualisation automatique !
+python train_mountaincar_pbrl.py
+```
+
+### Option 4 : Tests Rapides Visualisation
+```powershell
+python test_visual_preference.py      # Test Taxi
+python test_mountaincar_visual.py     # Test MountainCar
+```
+
+### Option 5 : Workflow Complet (30 min)
 Voir **`GUIDE_UTILISATION.md`** pour le guide détaillé.
 
 ## Structure du Projet
@@ -73,9 +97,12 @@ taxi-pbrl-project/
 ## Doc Documentation
 
 - **⭐ `GUIDE_UTILISATION.md`** - Guide complet d'utilisation (COMMENCER ICI)
+- **🎬 `docs/visual_comparison_complete.md`** - Guide visualisation Taxi & MountainCar
+- **`docs/visual_preferences_guide.md`** - Guide détaillé visualisation Taxi
 - **`QUICKSTART.md`** - Démarrage rapide
 - **`MOUNTAINCAR_RESULTS_FINAL.md`** - Analyse détaillée MountainCar
 - **`results/comparison_insights.txt`** - Insights comparatifs
+- **`CHANGELOG_VISUAL_REPLAYS.md`** - Changelog visualisation
 
 ## [TARGET] Commandes Essentielles
 
