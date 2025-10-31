@@ -22,15 +22,6 @@ Projet de comparaison d'agents **PBRL** vs **Classical RL** sur deux environneme
 pip install gymnasium numpy matplotlib pygame
 ```
 
-## 🎬 Nouvelle Fonctionnalité : Visualisation Graphique !
-
-Les deux environnements disposent maintenant d'une **visualisation Gymnasium interactive** pour comparer visuellement les trajectoires :
-
-- 🚕 **Taxi-v3** : Voir les déplacements du taxi en temps réel
-- 🏔️ **MountainCar-v0** : Observer l'accumulation d'élan et les oscillations
-
-**Contrôles** : ESPACE (pause), ÉCHAP (passer), replay/text (rejouer/texte)
-
 **Documentation** : `docs/visual_comparison_complete.md`
 
 ## Démarrage Rapide
@@ -42,14 +33,14 @@ python compare_taxi_vs_mountaincar.py
 
 ### Option 2 : Démonstration Taxi avec Visualisation (2 min)
 ```powershell
-python demo_preferences.py  # 🎬 Visualisation automatique !
+python demo_preferences.py
 python train_pbrl_agent.py
 ```
 
 ### Option 3 : MountainCar avec Visualisation
 ```powershell
 python train_mountaincar_classical.py
-python collect_mountaincar_preferences.py  # 🎬 Visualisation automatique !
+python collect_mountaincar_preferences.py
 python train_mountaincar_pbrl.py
 ```
 
@@ -59,7 +50,7 @@ python test_visual_preference.py      # Test Taxi
 python test_mountaincar_visual.py     # Test MountainCar
 ```
 
-### Option 5 : Workflow Complet (30 min)
+### Option 5 : Workflow Complet
 Voir **`GUIDE_UTILISATION.md`** pour le guide détaillé.
 
 ## Structure du Projet
@@ -104,7 +95,7 @@ taxi-pbrl-project/
 - **`results/comparison_insights.txt`** - Insights comparatifs
 - **`CHANGELOG_VISUAL_REPLAYS.md`** - Changelog visualisation
 
-## [TARGET] Commandes Essentielles
+## Commandes Essentielles
 
 ```powershell
 # Taxi TAXI - Workflow complet (7 min)
@@ -118,8 +109,6 @@ python train_mountaincar_pbrl.py
 
 # [PLOT] COMPARAISON - Visualisation finale
 python compare_taxi_vs_mountaincar.py
-
-## Report Pour Votre Rapport
 
 ### Principaux Graphiques
 
@@ -142,35 +131,6 @@ python compare_taxi_vs_mountaincar.py
 - **`results/mountaincar_pbrl_comparison.json`** - MC (200 épisodes)
 - **`results/comparison_taxi_vs_mountaincar.json`** - Comparaison
 
-## Insights Insights Clés
-
-### [OK] Efficacité d'Apprentissage
-- Taxi : **-87% d'épisodes** (2k vs 15k)
-- MountainCar : **-40% d'épisodes** (6k vs 10k)
-
-### [OK] Performances Finales
-- Taxi : 7.77 ± 2.59 (PBRL) vs 7.82 ± 2.60 (Classical) → **Équivalent**
-- MountainCar : 77% succès (PBRL) vs 100% (Classical) → **Acceptable**
-
-### [OK] Stabilité
-- Taxi : Écart-type similaire (~2.6)
-- MountainCar : PBRL plus variable mais converge plus vite
-
-### [TARGET] Conclusion
-Le PBRL démontre sa **robustesse** et sa **généralisation** sur deux environnements très différents, validant son utilité pour réduire les coûts d'entraînement.
-
-
-Supprime :
-- Fichiers temporaires et caches
-- Scripts de développement obsolètes  
-- Documentation obsolète (web interface, robust workflow, etc.)
-
-Conserve :
-- Scripts d'entraînement et démonstrations
-- Code source (src/)
-- Résultats importants
-- Documentation principale
-
 ## Debug Dépannage
 
 ### Erreur de module
@@ -189,19 +149,3 @@ Réduisez `n_episodes` dans les scripts d'entraînement.
 Pour plus d'informations, consultez :
 - **`GUIDE_UTILISATION.md`** - Guide complet et détaillé
 - **`results/comparison_insights.txt`** - Analyse comparative
-
----
-
-## Status Statut du Projet
-
-[OK] **TERMINÉ ET VALIDÉ**
-
-- [OK] Deux environnements implémentés (Taxi + MountainCar)
-- [OK] Agents Classical et PBRL fonctionnels
-- [OK] Comparaisons statistiques rigoureuses
-- [OK] Visualisations complètes
-- [OK] Documentation exhaustive
-- [OK] Prêt pour rapport et présentation
-
-**Temps total d'exécution :** ~30 minutes (workflow complet)  
-**Résultats :** PBRL réduit les épisodes de 40% à 87% tout en maintenant des performances équivalentes ! [START]
