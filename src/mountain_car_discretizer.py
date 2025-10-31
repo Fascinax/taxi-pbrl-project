@@ -49,7 +49,7 @@ class MountainCarDiscretizer:
         # Nombre total d'états discrets
         self.n_states = n_position_bins * n_velocity_bins
         
-        print(f"✅ MountainCarDiscretizer initialisé:")
+        print(f"[OK] MountainCarDiscretizer initialisé:")
         print(f"   - Bins position: {n_position_bins}")
         print(f"   - Bins vitesse: {n_velocity_bins}")
         print(f"   - Total états discrets: {self.n_states}")
@@ -224,13 +224,13 @@ def test_discretizer():
         state_array = np.array(state)
         info = discretizer.get_state_info(state_array)
         
-        print(f"📍 {description}")
+        print(f"[TRAJ] {description}")
         print(f"   État continu: position={state[0]:.3f}, vitesse={state[1]:.3f}")
         print(f"   État discret: {info['discrete_state']}")
         print(f"   Bins: position={info['position_bin']}, vitesse={info['velocity_bin']}")
         print(f"   Progrès: {info['progress_percent']:.1f}%")
         print(f"   Direction: {info['direction']}")
-        print(f"   But atteint: {'✅' if info['near_goal'] else '❌'}")
+        print(f"   But atteint: {'[OK]' if info['near_goal'] else '[ERROR]'}")
         print()
     
     # Test de la conversion inverse
@@ -262,7 +262,7 @@ def test_discretizer():
     
     print(discretizer.visualize_discretization())
     
-    print("✅ Tests terminés!")
+    print("[OK] Tests terminés!")
 
 
 if __name__ == "__main__":

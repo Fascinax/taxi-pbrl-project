@@ -75,7 +75,7 @@ def plot_comparison(classical_rewards, pbrl_rewards, save_path=None):
     
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"📊 Graphique sauvegardé: {save_path}")
+        print(f"[PLOT] Graphique sauvegardé: {save_path}")
     
     plt.close()
 
@@ -84,11 +84,11 @@ def main():
     """Script principal d'entraînement PBRL"""
     
     print(f"\n{'='*80}")
-    print("🎯 ENTRAÎNEMENT PBRL - MOUNTAINCAR-V0")
+    print("[START] ENTRAÎNEMENT PBRL - MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
-    # Configuration
-    PBRL_EPISODES = 6000  # Moins d'épisodes avec préférences
+    # Configuration pour comparaison équitable
+    PBRL_EPISODES = 6000  # Même nombre que classical
     EVAL_EPISODES = 200
     
     results_dir = "results"
@@ -100,60 +100,60 @@ def main():
     classical_agent_path = os.path.join(results_dir, "mountain_car_agent_classical.pkl")
     
     if not os.path.exists(preferences_path):
-        print(f"❌ Préférences non trouvées: {preferences_path}")
-        print("💡 Exécutez d'abord: python collect_mountaincar_preferences.py")
+        print(f"[ERROR] Préférences non trouvées: {preferences_path}")
+        print("[INFO] Exécutez d'abord: python collect_mountaincar_preferences.py")
         return
     
     if not os.path.exists(trajectories_path):
-        print(f"❌ Trajectoires non trouvées: {trajectories_path}")
-        print("💡 Exécutez d'abord: python collect_mountaincar_preferences.py")
+        print(f"[ERROR] Trajectoires non trouvées: {trajectories_path}")
+        print("[INFO] Exécutez d'abord: python collect_mountaincar_preferences.py")
         return
     
     if not os.path.exists(classical_agent_path):
-        print(f"❌ Agent classique non trouvé: {classical_agent_path}")
-        print("💡 Exécutez d'abord: python train_mountaincar_classical.py")
+        print(f"[ERROR] Agent classique non trouvé: {classical_agent_path}")
+        print("[INFO] Exécutez d'abord: python train_mountaincar_classical.py")
         return
     
     # Chargement des données
-    print("📂 CHARGEMENT DES DONNÉES")
+    print("[LOAD] CHARGEMENT DES DONNÉES")
     print("-" * 80)
     
     with open(preferences_path, 'r') as f:
         preferences = json.load(f)
-    print(f"✅ {len(preferences)} préférences chargées")
+    print(f"[OK] {len(preferences)} préférences chargées")
     
     with open(trajectories_path, 'rb') as f:
         trajectories = pickle.load(f)
-    print(f"✅ {len(trajectories)} trajectoires chargées")
+    print(f"[OK] {len(trajectories)} trajectoires chargées")
     
     # Chargement agent classique pour comparaison
     classical_agent = MountainCarAgent()
     classical_agent.load_agent(classical_agent_path)
     classical_rewards = classical_agent.training_rewards
-    print(f"✅ Agent classique chargé ({len(classical_rewards)} épisodes d'entraînement)\n")
+    print(f"[OK] Agent classique chargé ({len(classical_rewards)} épisodes d'entraînement)\n")
     
     # Création de l'environnement
-    print("🌍 Création de l'environnement...")
+    print("[ENV] Création de l'environnement...")
     env = gym.make('MountainCar-v0')
-    print("✅ Environnement créé\n")
+    print("[OK] Environnement créé\n")
     
-    # Création de l'agent PBRL
-    print("🤖 CRÉATION DE L'AGENT PBRL")
+    # Création de l'agent PBRL avec paramètres ÉQUILIBRÉS
+    print("[AGENT] CRÉATION DE L'AGENT PBRL")
     print("-" * 80)
     agent_pbrl = MountainCarPbRLAgent(
         n_position_bins=20,
         n_velocity_bins=20,
-        learning_rate=0.1,
+        learning_rate=0.12,        # Équilibré
         discount_factor=0.99,
         epsilon=1.0,
-        epsilon_decay=0.999,
+        epsilon_decay=0.999,       # Même que classical pour comparaison
         epsilon_min=0.01,
-        preference_weight=0.5
+        preference_weight=0.6      # Modéré pour éviter sur-apprentissage
     )
     print()
     
     # Entraînement PBRL
-    print(f"🚀 PHASE 1: ENTRAÎNEMENT PBRL ({PBRL_EPISODES} épisodes)")
+    print(f"[TRAIN] PHASE 1: ENTRAÎNEMENT PBRL ({PBRL_EPISODES} épisodes)")
     print("-" * 80)
     start_time = datetime.now()
     
@@ -165,10 +165,10 @@ def main():
     )
     
     training_time = (datetime.now() - start_time).total_seconds()
-    print(f"⏱️  Temps d'entraînement: {training_time:.2f} secondes\n")
+    print(f"[TIME] Temps d'entraînement: {training_time:.2f} secondes\n")
     
     # Évaluation PBRL
-    print(f"📊 PHASE 2: ÉVALUATION PBRL ({EVAL_EPISODES} épisodes)")
+    print(f"[EVAL] PHASE 2: ÉVALUATION PBRL ({EVAL_EPISODES} épisodes)")
     print("-" * 80)
     
     pbrl_eval_rewards, pbrl_eval_stats = agent_pbrl.evaluate(
@@ -178,7 +178,7 @@ def main():
     )
     
     # Évaluation agent classique
-    print(f"📊 PHASE 3: ÉVALUATION AGENT CLASSIQUE ({EVAL_EPISODES} épisodes)")
+    print(f"[PLOT] PHASE 3: ÉVALUATION AGENT CLASSIQUE ({EVAL_EPISODES} épisodes)")
     print("-" * 80)
     
     classical_eval_rewards, classical_eval_stats = classical_agent.evaluate(
@@ -192,12 +192,12 @@ def main():
     agent_pbrl.save_pbrl_agent(pbrl_agent_path)
     
     # Visualisation de la politique PBRL
-    print("\n🗺️  POLITIQUE APPRISE (PBRL)")
+    print("\n[MAP]  POLITIQUE APPRISE (PBRL)")
     print("-" * 80)
     agent_pbrl.visualize_policy()
     
     # Comparaison graphique
-    print("📈 CRÉATION DES VISUALISATIONS")
+    print("[CHART] CRÉATION DES VISUALISATIONS")
     print("-" * 80)
     
     comparison_plot_path = os.path.join(results_dir, "comparison_mountaincar_classical_vs_pbrl.png")
@@ -205,11 +205,11 @@ def main():
     
     # Analyse comparative détaillée
     print(f"\n{'='*80}")
-    print("📊 ANALYSE COMPARATIVE DÉTAILLÉE")
+    print("[PLOT] ANALYSE COMPARATIVE DÉTAILLÉE")
     print(f"{'='*80}\n")
     
     # Comparaison training
-    print("🏋️  ENTRAÎNEMENT")
+    print("[TRAIN]  ENTRAÎNEMENT")
     print("-" * 80)
     print(f"Classique:")
     print(f"  - Épisodes: {len(classical_rewards)}")
@@ -223,7 +223,7 @@ def main():
     print(f"\n  → Efficacité PBRL: {efficiency:.1f}% moins d'épisodes")
     
     # Comparaison évaluation
-    print(f"\n📊 ÉVALUATION ({EVAL_EPISODES} épisodes)")
+    print(f"\n[PLOT] ÉVALUATION ({EVAL_EPISODES} épisodes)")
     print("-" * 80)
     print(f"{'Métrique':<25} {'Classique':<15} {'PBRL':<15} {'Différence'}")
     print("-" * 80)
@@ -284,31 +284,31 @@ def main():
     results_json_path = os.path.join(results_dir, "mountaincar_pbrl_comparison.json")
     with open(results_json_path, 'w') as f:
         json.dump(comparison_results, f, indent=2)
-    print(f"\n💾 Résultats sauvegardés: {results_json_path}")
+    print(f"\n[SAVE] Résultats sauvegardés: {results_json_path}")
     
     # Résumé final
     print(f"\n{'='*80}")
-    print("🎉 ENTRAÎNEMENT PBRL TERMINÉ - RÉSUMÉ")
+    print("[DONE] ENTRAÎNEMENT PBRL TERMINÉ - RÉSUMÉ")
     print(f"{'='*80}")
     
     reward_improvement = pbrl_eval_stats['mean_reward'] - classical_eval_stats['mean_reward']
     reward_improvement_pct = (reward_improvement / abs(classical_eval_stats['mean_reward'])) * 100
     
-    print(f"\n📈 PERFORMANCES")
+    print(f"\n[CHART] PERFORMANCES")
     print("-" * 80)
     print(f"Classique: {classical_eval_stats['mean_reward']:.2f} ± {classical_eval_stats['std_reward']:.2f}")
     print(f"PBRL:      {pbrl_eval_stats['mean_reward']:.2f} ± {pbrl_eval_stats['std_reward']:.2f}")
     
     if reward_improvement > 0:
-        print(f"\n✅ PBRL est MEILLEUR: +{reward_improvement:.2f} ({reward_improvement_pct:+.2f}%)")
+        print(f"\n[OK] PBRL est MEILLEUR: +{reward_improvement:.2f} ({reward_improvement_pct:+.2f}%)")
     else:
-        print(f"\n⚠️  Classique est meilleur: {reward_improvement:.2f} ({reward_improvement_pct:.2f}%)")
+        print(f"\n[WARN]  Classique est meilleur: {reward_improvement:.2f} ({reward_improvement_pct:.2f}%)")
     
-    print(f"\n⚡ EFFICACITÉ D'APPRENTISSAGE")
+    print(f"\n[FAST] EFFICACITÉ D'APPRENTISSAGE")
     print("-" * 80)
     print(f"PBRL utilise {efficiency:.1f}% moins d'épisodes pour atteindre des performances similaires")
     
-    print(f"\n📁 FICHIERS GÉNÉRÉS")
+    print(f"\n[FILES] FICHIERS GÉNÉRÉS")
     print("-" * 80)
     print(f"  - Agent PBRL: {pbrl_agent_path}")
     print(f"  - Résultats: {results_json_path}")

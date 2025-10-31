@@ -15,34 +15,49 @@ from collect_mountaincar_preferences import collect_mountaincar_trajectory, Moun
 
 def auto_select_preference(traj_a: MountainCarTrajectory, traj_b: MountainCarTrajectory) -> int:
     """
-    Sélection automatique basée sur des critères objectifs
+    Sélection automatique OPTIMISÉE basée sur des critères objectifs hiérarchiques
     
     Returns:
         1 si A est meilleure, 2 si B est meilleure, 0 si égalité
     """
-    # Critère 1: Succès vs échec
+    # Critère 1 (Priorité MAX): Succès vs échec
     if traj_a.success and not traj_b.success:
         return 1
     if traj_b.success and not traj_a.success:
         return 2
     
-    # Critère 2: Si les deux réussissent, préférer la plus rapide
+    # Critère 2: Si les deux réussissent, préférer la plus rapide (efficacité)
     if traj_a.success and traj_b.success:
-        if abs(traj_a.episode_length - traj_b.episode_length) > 2:
+        length_diff = abs(traj_a.episode_length - traj_b.episode_length)
+        if length_diff > 3:  # Seuil abaissé pour être plus discriminant
             return 1 if traj_a.episode_length < traj_b.episode_length else 2
     
-    # Critère 3: Si les deux échouent, préférer celle qui monte plus haut
+    # Critère 3: Si les deux échouent, préférer celle qui monte BEAUCOUP plus haut
     if not traj_a.success and not traj_b.success:
         position_diff = abs(traj_a.max_position - traj_b.max_position)
-        if position_diff > 0.05:
+        
+        # Préférence forte si différence significative
+        if position_diff > 0.1:  # Différence marquée
             return 1 if traj_a.max_position > traj_b.max_position else 2
+        elif position_diff > 0.03:  # Différence modérée
+            # Double-check avec la récompense
+            if abs(traj_a.total_reward - traj_b.total_reward) > 3:
+                return 1 if traj_a.total_reward > traj_b.total_reward else 2
     
     # Critère 4: Différence de récompense significative
     reward_diff = abs(traj_a.total_reward - traj_b.total_reward)
-    if reward_diff > 5:
+    if reward_diff > 10:  # Seuil augmenté pour éviter les égalités
         return 1 if traj_a.total_reward > traj_b.total_reward else 2
     
-    # Sinon, égalité
+    # Critère 5: Efficacité (récompense / longueur)
+    efficiency_a = traj_a.total_reward / max(traj_a.episode_length, 1)
+    efficiency_b = traj_b.total_reward / max(traj_b.episode_length, 1)
+    efficiency_diff = abs(efficiency_a - efficiency_b)
+    
+    if efficiency_diff > 0.15:
+        return 1 if efficiency_a > efficiency_b else 2
+    
+    # Sinon, égalité (rare maintenant)
     return 0
 
 
@@ -50,12 +65,12 @@ def main():
     """Collection automatique de préférences"""
     
     print(f"\n{'='*80}")
-    print("🤖 COLLECTE AUTOMATIQUE DE PRÉFÉRENCES - MOUNTAINCAR-V0")
+    print("[AGENT] COLLECTE AUTOMATIQUE DE PRÉFÉRENCES - MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
     # Configuration
-    N_TRAJECTORIES = 50
-    N_PREFERENCES = 25
+    N_TRAJECTORIES = 80  # Augmenté pour plus de diversité
+    N_PREFERENCES = 40   # Augmenté pour plus d'apprentissage
     
     results_dir = "results"
     os.makedirs(results_dir, exist_ok=True)
@@ -64,22 +79,22 @@ def main():
     agent_path = os.path.join(results_dir, "mountain_car_agent_classical.pkl")
     
     if not os.path.exists(agent_path):
-        print(f"❌ Agent non trouvé: {agent_path}")
-        print("💡 Exécutez d'abord: python train_mountaincar_classical.py")
+        print(f"[ERROR] Agent non trouvé: {agent_path}")
+        print("[INFO] Exécutez d'abord: python train_mountaincar_classical.py")
         return
     
-    print(f"📂 Chargement de l'agent...")
+    print(f"[LOAD] Chargement de l'agent...")
     agent = MountainCarAgent()
     agent.load_agent(agent_path)
-    print("✅ Agent chargé\n")
+    print("[OK] Agent chargé\n")
     
     # Environnement
-    print("🌍 Création de l'environnement...")
+    print("[ENV] Création de l'environnement...")
     env = gym.make('MountainCar-v0')
-    print("✅ Environnement créé\n")
+    print("[OK] Environnement créé\n")
     
     # Génération de trajectoires
-    print(f"🎬 GÉNÉRATION DE {N_TRAJECTORIES} TRAJECTOIRES")
+    print(f"[ACTION] GÉNÉRATION DE {N_TRAJECTORIES} TRAJECTOIRES")
     print("-" * 80)
     
     trajectories = []
@@ -93,35 +108,56 @@ def main():
                   f"Succès: {successes}/{i + 1} ({successes/(i+1)*100:.1f}%)")
     
     total_successes = sum(1 for t in trajectories if t.success)
-    print(f"\n✅ {N_TRAJECTORIES} trajectoires générées")
+    print(f"\n[OK] {N_TRAJECTORIES} trajectoires générées")
     print(f"   Taux de succès: {total_successes}/{N_TRAJECTORIES} ({total_successes/N_TRAJECTORIES*100:.1f}%)\n")
     
-    # Sélection de paires
-    print(f"📊 SÉLECTION DE {N_PREFERENCES} PAIRES")
+    # Sélection de paires OPTIMISÉE pour contraste maximum
+    print(f"[PLOT] SÉLECTION DE {N_PREFERENCES} PAIRES")
     print("-" * 80)
     
     pairs = []
     
     # Tri par performance
-    sorted_trajs = sorted(trajectories, key=lambda t: (t.success, t.total_reward), reverse=True)
+    sorted_trajs = sorted(trajectories, key=lambda t: (t.success, t.total_reward, -t.episode_length), reverse=True)
     
-    # Créer des paires variées
-    for i in range(0, min(N_PREFERENCES * 2, len(sorted_trajs) - 1), 2):
-        if i + 1 < len(sorted_trajs):
-            pairs.append((sorted_trajs[i], sorted_trajs[i + 1]))
+    # Séparer succès et échecs
+    success_trajs = [t for t in sorted_trajs if t.success]
+    fail_trajs = [t for t in sorted_trajs if not t.success]
     
-    # Compléter avec paires aléatoires si nécessaire
-    while len(pairs) < N_PREFERENCES and len(trajectories) >= 2:
-        idx_a = np.random.randint(0, len(trajectories))
-        idx_b = np.random.randint(0, len(trajectories))
-        if idx_a != idx_b:
-            pairs.append((trajectories[idx_a], trajectories[idx_b]))
+    print(f"   Succès: {len(success_trajs)}, Échecs: {len(fail_trajs)}")
+    
+    # Stratégie 1: Paires succès vs échec (contraste maximum)
+    min_contrasted = min(len(success_trajs), len(fail_trajs), N_PREFERENCES // 2)
+    for i in range(min_contrasted):
+        pairs.append((success_trajs[i], fail_trajs[i]))
+    
+    # Stratégie 2: Paires au sein des succès (meilleur vs moins bon)
+    if len(success_trajs) >= 4:
+        for i in range(0, min(len(success_trajs) // 2, N_PREFERENCES // 4)):
+            if i * 2 + 1 < len(success_trajs):
+                pairs.append((success_trajs[i], success_trajs[len(success_trajs) - 1 - i]))
+    
+    # Stratégie 3: Paires au sein des échecs (haut vs bas)
+    if len(fail_trajs) >= 4:
+        fail_sorted = sorted(fail_trajs, key=lambda t: t.max_position, reverse=True)
+        for i in range(0, min(len(fail_sorted) // 2, N_PREFERENCES // 4)):
+            if i * 2 + 1 < len(fail_sorted):
+                pairs.append((fail_sorted[i], fail_sorted[len(fail_sorted) - 1 - i]))
+    
+    # Compléter avec paires adjacentes variées si nécessaire
+    remaining = N_PREFERENCES - len(pairs)
+    if remaining > 0 and len(sorted_trajs) >= 2:
+        step = max(2, len(sorted_trajs) // (remaining + 1))
+        for i in range(0, len(sorted_trajs) - step, step):
+            if len(pairs) >= N_PREFERENCES:
+                break
+            pairs.append((sorted_trajs[i], sorted_trajs[i + step]))
     
     pairs = pairs[:N_PREFERENCES]
-    print(f"✅ {len(pairs)} paires sélectionnées\n")
+    print(f"[OK] {len(pairs)} paires sélectionnées\n")
     
     # Collection automatique
-    print(f"🤖 COLLECTE AUTOMATIQUE DE {len(pairs)} PRÉFÉRENCES")
+    print(f"[AGENT] COLLECTE AUTOMATIQUE DE {len(pairs)} PRÉFÉRENCES")
     print("-" * 80)
     
     preferences = []
@@ -157,24 +193,24 @@ def main():
     env.close()
     
     # Sauvegarde
-    print(f"\n💾 SAUVEGARDE DES DONNÉES")
+    print(f"\n[SAVE] SAUVEGARDE DES DONNÉES")
     print("-" * 80)
     
     # Préférences
     preferences_path = os.path.join(results_dir, "mountaincar_preferences.json")
     with open(preferences_path, 'w') as f:
         json.dump(preferences, f, indent=2)
-    print(f"✅ Préférences sauvegardées: {preferences_path}")
+    print(f"[OK] Préférences sauvegardées: {preferences_path}")
     
     # Trajectoires
     trajectories_path = os.path.join(results_dir, "mountaincar_trajectories.pkl")
     with open(trajectories_path, 'wb') as f:
         pickle.dump(trajectories, f)
-    print(f"✅ Trajectoires sauvegardées: {trajectories_path}")
+    print(f"[OK] Trajectoires sauvegardées: {trajectories_path}")
     
     # Statistiques
     print(f"\n{'='*80}")
-    print("📊 STATISTIQUES DES PRÉFÉRENCES")
+    print("[PLOT] STATISTIQUES DES PRÉFÉRENCES")
     print(f"{'='*80}")
     print(f"Total préférences: {len(preferences)}")
     
@@ -187,7 +223,7 @@ def main():
     print(f"  Égalité: {choices_equal} ({choices_equal/len(preferences)*100:.1f}%)")
     print(f"{'='*80}\n")
     
-    print("✅ Collection automatique terminée!")
+    print("[OK] Collection automatique terminée!")
     print("   Prochaine étape: python train_mountaincar_pbrl.py\n")
 
 

@@ -156,7 +156,7 @@ class TrajectoryManager:
         print("="*80)
         
         # Comparaison générale
-        print(f"\n📊 STATISTIQUES GÉNÉRALES:")
+        print(f"\n[PLOT] STATISTIQUES GÉNÉRALES:")
         print(f"{'Métrique':<20} {'Trajectoire A':<15} {'Trajectoire B':<15} {'Meilleure':<10}")
         print("-" * 65)
         
@@ -164,13 +164,13 @@ class TrajectoryManager:
             ("Récompense totale", summary1['total_reward'], summary2['total_reward']),
             ("Longueur épisode", summary1['episode_length'], summary2['episode_length']),
             ("Efficacité", f"{summary1['efficiency']:.3f}", f"{summary2['efficiency']:.3f}"),
-            ("Succès", "✅" if summary1['success'] else "❌", "✅" if summary2['success'] else "❌")
+            ("Succès", "[OK]" if summary1['success'] else "[ERROR]", "[OK]" if summary2['success'] else "[ERROR]")
         ]
         
         for metric_name, val1, val2 in metrics:
             if metric_name in ["Récompense totale", "Efficacité"]:
                 # Plus élevé = meilleur
-                better = "A" if float(str(val1).replace("✅", "1").replace("❌", "0")) > float(str(val2).replace("✅", "1").replace("❌", "0")) else "B" if float(str(val1).replace("✅", "1").replace("❌", "0")) < float(str(val2).replace("✅", "1").replace("❌", "0")) else "="
+                better = "A" if float(str(val1).replace("[OK]", "1").replace("[ERROR]", "0")) > float(str(val2).replace("[OK]", "1").replace("[ERROR]", "0")) else "B" if float(str(val1).replace("[OK]", "1").replace("[ERROR]", "0")) < float(str(val2).replace("[OK]", "1").replace("[ERROR]", "0")) else "="
             elif metric_name == "Longueur épisode":
                 # Plus court = meilleur (plus efficace)
                 better = "A" if val1 < val2 else "B" if val1 > val2 else "="
@@ -180,7 +180,7 @@ class TrajectoryManager:
             print(f"{metric_name:<20} {str(val1):<15} {str(val2):<15} {better:<10}")
         
         # Actions utilisées
-        print(f"\n🎯 ACTIONS UTILISÉES:")
+        print(f"\n[TARGET] ACTIONS UTILISÉES:")
         actions_names = ["Sud", "Nord", "Est", "Ouest", "Prendre", "Déposer"]
         print(f"{'Action':<12} {'Traj A':<8} {'Traj B':<8}")
         print("-" * 30)
@@ -190,7 +190,7 @@ class TrajectoryManager:
             print(f"{action:<12} {count1:<8} {count2:<8}")
         
         # Séquence des premières actions
-        print(f"\n🔄 PREMIÈRES 10 ACTIONS:")
+        print(f"\n[ITER] PREMIÈRES 10 ACTIONS:")
         seq1 = " → ".join(summary1['actions_taken'][:10])
         seq2 = " → ".join(summary2['actions_taken'][:10])
         print(f"Trajectoire A: {seq1}")

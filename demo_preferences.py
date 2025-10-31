@@ -14,14 +14,14 @@ def main():
     print("=== DÉMONSTRATION DU SYSTÈME DE PRÉFÉRENCES ===")
     
     # Chargement de l'agent pré-entraîné
-    print("\n1️⃣ Chargement de l'agent Q-Learning entraîné...")
+    print("\n1 Chargement de l'agent Q-Learning entraîné...")
     agent = QLearningAgent(n_states=500, n_actions=6)
     
     try:
         agent.load_agent("results/q_learning_agent_classical.pkl")
-        print("✅ Agent chargé avec succès!")
+        print("[OK] Agent chargé avec succès!")
     except FileNotFoundError:
-        print("❌ Agent non trouvé. Veuillez d'abord entraîner l'agent avec train_classical_agent.py")
+        print("[ERROR] Agent non trouvé. Veuillez d'abord entraîner l'agent avec train_classical_agent.py")
         return
     
     # Création de l'environnement
@@ -32,7 +32,7 @@ def main():
     preference_interface = PreferenceInterface()
     
     # Collecte de trajectoires
-    print("\n2️⃣ Collecte de trajectoires de démonstration...")
+    print("\n2 Collecte de trajectoires de démonstration...")
     trajectories = []
     
     print("Génération de 10 trajectoires...")
@@ -47,7 +47,7 @@ def main():
     trajectory_manager.save_trajectories(f"{results_dir}/demo_trajectories.pkl")
     
     # Sélection de paires intéressantes pour comparaison
-    print("\n3️⃣ Sélection de paires de trajectoires pour comparaison...")
+    print("\n3 Sélection de paires de trajectoires pour comparaison...")
     
     # Tri des trajectoires par récompense pour créer des paires intéressantes
     trajectories_sorted = sorted(trajectories, key=lambda t: t.total_reward, reverse=True)
@@ -72,33 +72,33 @@ def main():
         mid_idx = len(trajectories_sorted) // 2
         interesting_pairs.append((trajectories_sorted[mid_idx], trajectories_sorted[mid_idx + 1]))
     
-    print(f"✅ {len(interesting_pairs)} paires sélectionnées pour comparaison")
+    print(f"[OK] {len(interesting_pairs)} paires sélectionnées pour comparaison")
     
     # Démonstration de la comparaison
-    print("\n4️⃣ Démonstration de la comparaison de trajectoires...")
+    print("\n4 Démonstration de la comparaison de trajectoires...")
     
     if interesting_pairs:
-        print("\n🔍 EXEMPLE DE COMPARAISON AUTOMATIQUE:")
+        print("\n[AUTO] EXEMPLE DE COMPARAISON AUTOMATIQUE:")
         traj1, traj2 = interesting_pairs[0]
         trajectory_manager.display_trajectory_comparison(traj1, traj2)
         
         # Visualisation graphique
-        print("\n📊 Génération de la visualisation graphique...")
+        print("\n[PLOT] Génération de la visualisation graphique...")
         trajectory_manager.visualize_trajectories(
             traj1, traj2, 
             save_path=f"{results_dir}/trajectory_comparison_demo.png"
         )
     
     # Interface de préférences (mode démonstration)
-    print("\n5️⃣ Démonstration de l'interface de préférences...")
-    print("\n🤖 COLLECTE INTERACTIVE DE PRÉFÉRENCES")
+    print("\n5 Démonstration de l'interface de préférences...")
+    print("\n[START] COLLECTE INTERACTIVE DE PRÉFÉRENCES")
     print("Vous allez maintenant pouvoir comparer des trajectoires et exprimer vos préférences.")
     
-    demo_choice = input("\n👉 Voulez-vous tester l'interface de préférences ? (y/n): ").strip().lower()
+    demo_choice = input("\n[INPUT] Voulez-vous tester l'interface de préférences ? (y/n): ").strip().lower()
     
     if demo_choice in ['y', 'yes', 'oui', 'o']:
         # Session de préférences interactive
-        print("\n🎯 SESSION DE PRÉFÉRENCES INTERACTIVE")
+        print("\n[START] SESSION DE PRÉFÉRENCES INTERACTIVE")
         collected_preferences = preference_interface.collect_preference_batch(
             interesting_pairs[:2],  # Limiter à 2 comparaisons pour la démo
             trajectory_manager
@@ -108,20 +108,20 @@ def main():
         preference_interface.save_preferences(f"{results_dir}/demo_preferences.json")
         preference_interface.display_preferences_summary()
         
-        print("\n✅ Démonstration des préférences terminée!")
+        print("\n[OK] Démonstration des préférences terminée!")
         
     else:
-        print("⏭️ Interface de préférences ignorée.")
+        print("[SKIP] Interface de préférences ignorée.")
     
     # Résumé et prochaines étapes
     print("\n" + "="*80)
-    print("🎉 DÉMONSTRATION TERMINÉE")
+    print("[DONE] DÉMONSTRATION TERMINÉE")
     print("="*80)
-    print("✅ Système de trajectoires opérationnel")
-    print("✅ Interface de préférences fonctionnelle")
-    print("✅ Visualisations et comparaisons disponibles")
+    print("[OK] Système de trajectoires opérationnel")
+    print("[OK] Interface de préférences fonctionnelle")
+    print("[OK] Visualisations et comparaisons disponibles")
     
-    print(f"\n📁 Fichiers générés dans '{results_dir}/':")
+    print(f"\n[FILES] Fichiers générés dans '{results_dir}/':")
     generated_files = [
         "demo_trajectories.pkl (trajectoires collectées)",
         "trajectory_comparison_demo.png (visualisation)",
@@ -133,7 +133,7 @@ def main():
     for file in generated_files:
         print(f"   • {file}")
     
-    print(f"\n🚀 PROCHAINES ÉTAPES:")
+    print(f"\n[NEXT] PROCHAINES ÉTAPES:")
     print("   1. Créer le système de conversion préférences → apprentissage")
     print("   2. Implémenter l'agent PbRL (Preference-based RL)")
     print("   3. Comparer agent classique vs agent PbRL")

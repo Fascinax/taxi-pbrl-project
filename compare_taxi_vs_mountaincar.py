@@ -311,36 +311,36 @@ def create_insights_summary(taxi_metrics, taxi_classical, mc_metrics, mc_classic
 ║              COMPARAISON PBRL: TAXI vs MOUNTAINCAR - INSIGHTS             ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
-📊 EFFICACITÉ D'APPRENTISSAGE
+[PLOT] EFFICACITÉ D'APPRENTISSAGE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Taxi-v3:       {taxi_metrics['episodes']:,} épisodes (-{taxi_reduction:.0f}% vs Classical)
   MountainCar:   {mc_metrics['episodes']:,} épisodes (-{mc_reduction:.0f}% vs Classical)
   
-  🏆 Meilleur: {'Taxi' if taxi_reduction > mc_reduction else 'MountainCar'} avec {max(taxi_reduction, mc_reduction):.0f}% de réduction
+  Status Meilleur: {'Taxi' if taxi_reduction > mc_reduction else 'MountainCar'} avec {max(taxi_reduction, mc_reduction):.0f}% de réduction
 
-🎯 PERFORMANCE FINALE
+[TARGET] PERFORMANCE FINALE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Taxi-v3:       {taxi_metrics['mean_reward']:.2f} ± {taxi_metrics['std_reward']:.2f}
   MountainCar:   {mc_metrics['mean_reward']:.2f} ± {mc_metrics['std_reward']:.2f}
   
-  💡 Note: Échelles différentes (Taxi: positif, MC: négatif)
+  [INFO] Note: Échelles différentes (Taxi: positif, MC: négatif)
 
-📉 STABILITÉ (Écart-type)
+[DOWN] STABILITÉ (Écart-type)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Taxi-v3:       {taxi_metrics['std_reward']:.2f} ({taxi_std_reduction:+.0f}% vs Classical)
   MountainCar:   {mc_metrics['std_reward']:.2f} ({mc_std_reduction:+.0f}% vs Classical)
   
-  🏆 Plus stable: {'Taxi' if taxi_metrics['std_reward'] < mc_metrics['std_reward'] else 'MountainCar'}
-  🏆 Meilleure réduction: {'Taxi' if taxi_std_reduction > mc_std_reduction else 'MountainCar'} ({max(taxi_std_reduction, mc_std_reduction):.0f}%)
+  Status Plus stable: {'Taxi' if taxi_metrics['std_reward'] < mc_metrics['std_reward'] else 'MountainCar'}
+  Status Meilleure réduction: {'Taxi' if taxi_std_reduction > mc_std_reduction else 'MountainCar'} ({max(taxi_std_reduction, mc_std_reduction):.0f}%)
 
-✅ TAUX DE SUCCÈS
+[OK] TAUX DE SUCCÈS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Taxi-v3:       {taxi_metrics['success_rate']:.0f}%
   MountainCar:   {mc_metrics['success_rate']:.0f}%
   
   ✨ Les deux agents atteignent des performances optimales !
 
-⚡ INSIGHTS CLÉS
+[FAST] INSIGHTS CLÉS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
     
@@ -359,13 +359,13 @@ def create_insights_summary(taxi_metrics, taxi_classical, mc_metrics, mc_classic
     
     if mc_std_reduction > taxi_std_reduction:
         insights += f"""
-  2. 🎯 MountainCar bénéficie PLUS de la stabilité du PBRL
+  2. [TARGET] MountainCar bénéficie PLUS de la stabilité du PBRL
      → Variance réduite de {mc_std_reduction:.0f}% vs {taxi_std_reduction:.0f}% pour Taxi
      → Les préférences lissent fortement le comportement
 """
     else:
         insights += f"""
-  2. 🎯 Taxi bénéficie PLUS de la stabilité du PBRL
+  2. [TARGET] Taxi bénéficie PLUS de la stabilité du PBRL
      → Variance réduite de {taxi_std_reduction:.0f}% vs {mc_std_reduction:.0f}% pour MC
      → Les préférences homogénéisent les politiques
 """
@@ -375,21 +375,21 @@ def create_insights_summary(taxi_metrics, taxi_classical, mc_metrics, mc_classic
      → PBRL ne sacrifie pas la performance finale
      → Convergence garantie avec moins d'épisodes
      
-  4. 🔬 Trade-offs différents selon l'environnement
+  4. Insights Trade-offs différents selon l'environnement
      → Taxi: Environnement discret, récompenses denses
      → MountainCar: Espace continu, récompenses sparses
      → PBRL s'adapte aux deux paradigmes
 
-🎓 CONCLUSION
+Report CONCLUSION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Le PBRL démontre sa ROBUSTESSE et sa GÉNÉRALISATION sur deux environnements
   très différents. L'efficacité d'apprentissage et la stabilité sont 
   systématiquement améliorées, validant l'approche pour diverses applications.
   
-  📈 Taxi-v3:       Excellent pour démontrer l'efficacité (-{taxi_reduction:.0f}% épisodes)
-  🏔️  MountainCar:  Excellent pour démontrer la stabilité (-{mc_std_reduction:.0f}% variance)
+  [CHART] Taxi-v3:       Excellent pour démontrer l'efficacité (-{taxi_reduction:.0f}% épisodes)
+  MountainCar  MountainCar:  Excellent pour démontrer la stabilité (-{mc_std_reduction:.0f}% variance)
   
-  🚀 Ensemble, ils prouvent la VALEUR du PBRL dans le RL moderne !
+  [START] Ensemble, ils prouvent la VALEUR du PBRL dans le RL moderne !
 
 ╚═══════════════════════════════════════════════════════════════════════════╝
 """
@@ -397,10 +397,10 @@ def create_insights_summary(taxi_metrics, taxi_classical, mc_metrics, mc_classic
     return insights
 
 def main():
-    print("🔬 Chargement des résultats...")
+    print("Insights Chargement des résultats...")
     taxi_data, mountaincar_data = load_results()
     
-    print("📊 Extraction des métriques...")
+    print("[PLOT] Extraction des métriques...")
     taxi_metrics, taxi_classical, mc_metrics, mc_classical = extract_metrics(taxi_data, mountaincar_data)
     
     print("🎨 Création des visualisations comparatives...")
@@ -409,7 +409,7 @@ def main():
     # Sauvegarder
     output_path = Path("results") / "comparison_taxi_vs_mountaincar_pbrl.png"
     fig.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"✅ Graphique sauvegardé: {output_path}")
+    print(f"[OK] Graphique sauvegardé: {output_path}")
     
     # Générer insights
     insights = create_insights_summary(taxi_metrics, taxi_classical, mc_metrics, mc_classical)
@@ -419,7 +419,7 @@ def main():
     insights_path = Path("results") / "comparison_insights.txt"
     with open(insights_path, 'w', encoding='utf-8') as f:
         f.write(insights)
-    print(f"✅ Insights sauvegardés: {insights_path}")
+    print(f"[OK] Insights sauvegardés: {insights_path}")
     
     # Sauvegarder données JSON
     comparison_data = {
@@ -448,10 +448,10 @@ def main():
     json_path = Path("results") / "comparison_taxi_vs_mountaincar.json"
     with open(json_path, 'w') as f:
         json.dump(comparison_data, f, indent=2)
-    print(f"✅ Données JSON sauvegardées: {json_path}")
+    print(f"[OK] Données JSON sauvegardées: {json_path}")
     
-    print("\n🎉 Comparaison terminée avec succès!")
-    print(f"\n📁 Fichiers générés:")
+    print("\n[DONE] Comparaison terminée avec succès!")
+    print(f"\n[FILES] Fichiers générés:")
     print(f"  • {output_path}")
     print(f"  • {insights_path}")
     print(f"  • {json_path}")

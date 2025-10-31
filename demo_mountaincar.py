@@ -28,7 +28,7 @@ def watch_random_agent(episodes: int = 3):
         total_reward = 0
         steps = 0
         
-        print(f"\n🎬 Épisode {episode + 1}/{episodes}")
+        print(f"\n[ACTION] Épisode {episode + 1}/{episodes}")
         print(f"Position initiale: {state[0]:.3f}, Vitesse initiale: {state[1]:.3f}")
         
         while steps < 200:
@@ -43,7 +43,7 @@ def watch_random_agent(episodes: int = 3):
                 break
         
         success = state[0] >= 0.5
-        print(f"Résultat: {'✅ Succès!' if success else '❌ Échec'}")
+        print(f"Résultat: {'[OK] Succès!' if success else '[ERROR] Échec'}")
         print(f"Position finale: {state[0]:.3f}")
         print(f"Récompense totale: {total_reward:.0f}")
         print(f"Nombre de pas: {steps}")
@@ -61,19 +61,19 @@ def watch_trained_agent(agent_path: str, episodes: int = 5):
         episodes: Nombre d'épisodes à observer
     """
     print(f"\n{'='*80}")
-    print("🤖 AGENT ENTRAÎNÉ - MOUNTAINCAR-V0")
+    print("[AGENT] AGENT ENTRAÎNÉ - MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
     if not os.path.exists(agent_path):
-        print(f"❌ Agent non trouvé: {agent_path}")
-        print("💡 Exécutez d'abord: python train_mountaincar_classical.py")
+        print(f"[ERROR] Agent non trouvé: {agent_path}")
+        print("[INFO] Exécutez d'abord: python train_mountaincar_classical.py")
         return
     
     # Chargement de l'agent
-    print(f"📂 Chargement de l'agent: {agent_path}")
+    print(f"[LOAD] Chargement de l'agent: {agent_path}")
     agent = MountainCarAgent()
     agent.load_agent(agent_path)
-    print("✅ Agent chargé\n")
+    print("[OK] Agent chargé\n")
     
     env = gym.make('MountainCar-v0', render_mode='human')
     
@@ -86,7 +86,7 @@ def watch_trained_agent(agent_path: str, episodes: int = 5):
         total_reward = 0
         steps = 0
         
-        print(f"\n🎬 Épisode {episode + 1}/{episodes}")
+        print(f"\n[ACTION] Épisode {episode + 1}/{episodes}")
         print(f"Position initiale: {state[0]:.3f}, Vitesse initiale: {state[1]:.3f}")
         
         # Analyse de la stratégie initiale
@@ -114,7 +114,7 @@ def watch_trained_agent(agent_path: str, episodes: int = 5):
         total_rewards.append(total_reward)
         total_steps_list.append(steps)
         
-        print(f"Résultat: {'✅ Succès!' if success else '❌ Échec'}")
+        print(f"Résultat: {'[OK] Succès!' if success else '[ERROR] Échec'}")
         print(f"Position finale: {state[0]:.3f}")
         print(f"Récompense totale: {total_reward:.0f}")
         print(f"Nombre de pas: {steps}")
@@ -123,7 +123,7 @@ def watch_trained_agent(agent_path: str, episodes: int = 5):
     
     # Statistiques finales
     print(f"\n{'='*80}")
-    print("📊 STATISTIQUES")
+    print("[PLOT] STATISTIQUES")
     print(f"{'='*80}")
     print(f"Taux de succès: {(successes/episodes)*100:.1f}% ({successes}/{episodes})")
     print(f"Récompense moyenne: {np.mean(total_rewards):.2f} ± {np.std(total_rewards):.2f}")
@@ -134,12 +134,12 @@ def watch_trained_agent(agent_path: str, episodes: int = 5):
 def analyze_environment():
     """Analyse détaillée de l'environnement MountainCar"""
     print(f"\n{'='*80}")
-    print("🔬 ANALYSE DE L'ENVIRONNEMENT MOUNTAINCAR-V0")
+    print("Insights ANALYSE DE L'ENVIRONNEMENT MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
     env = gym.make('MountainCar-v0')
     
-    print("📋 INFORMATIONS GÉNÉRALES")
+    print("[LIST] INFORMATIONS GÉNÉRALES")
     print("-" * 80)
     print(f"Espace d'observation: {env.observation_space}")
     print(f"  - Position: [-1.2, 0.6]")
@@ -180,7 +180,7 @@ def analyze_environment():
         if terminated or truncated:
             break
     
-    print(f"\n💡 STRATÉGIE OPTIMALE:")
+    print(f"\n[INFO] STRATÉGIE OPTIMALE:")
     print("-" * 80)
     print("La voiture doit prendre de l'élan en oscillant entre les deux collines")
     print("pour accumuler assez de vitesse et atteindre le drapeau.")
@@ -193,7 +193,7 @@ def analyze_environment():
 def compare_strategies():
     """Compare différentes stratégies simples"""
     print(f"\n{'='*80}")
-    print("⚖️  COMPARAISON DE STRATÉGIES SIMPLES")
+    print("[COMPARE]  COMPARAISON DE STRATÉGIES SIMPLES")
     print(f"{'='*80}\n")
     
     env = gym.make('MountainCar-v0')
@@ -227,7 +227,7 @@ def compare_strategies():
             if state[0] >= 0.5:
                 successes += 1
         
-        print(f"📊 {name:20} | Succès: {successes:2}/10 | "
+        print(f"[PLOT] {name:20} | Succès: {successes:2}/10 | "
               f"Récompense moy: {np.mean(rewards):7.2f}")
     
     print(f"\n{'='*80}\n")
@@ -270,12 +270,12 @@ def main():
             input("\nAppuyez sur Entrée pour voir l'agent entraîné...")
             watch_trained_agent(agent_path, episodes=3)
         else:
-            print("\n⚠️  Agent entraîné non trouvé. Exécutez d'abord:")
+            print("\n[WARN]  Agent entraîné non trouvé. Exécutez d'abord:")
             print("   python train_mountaincar_classical.py")
     elif choice == '0':
         print("Au revoir! 👋")
     else:
-        print("❌ Choix invalide")
+        print("[ERROR] Choix invalide")
 
 
 if __name__ == "__main__":

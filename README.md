@@ -74,14 +74,14 @@ taxi-pbrl-project/
 │   ├── compare_taxi_vs_mountaincar.py    # Comparaison inter-env
 │   └── cleanup_project.py                # Nettoyage projet
 │
-├── 🧠 CODE SOURCE (src/)
+├── Source CODE SOURCE (src/)
 │   ├── q_learning_agent.py               # Agent Q-Learning base
 │   ├── pbrl_agent.py                     # Agent PBRL (Taxi)
 │   ├── mountain_car_agent.py             # Agent Q-Learning MC
 │   ├── mountain_car_pbrl_agent.py        # Agent PBRL MC
 │   └── ... (7 fichiers)
 │
-├── 📊 RÉSULTATS (results/)
+├── [PLOT] RÉSULTATS (results/)
 │   ├── comparison_taxi_vs_mountaincar_pbrl.png  # ⭐ Comparaison visuelle
 │   ├── comparison_insights.txt                  # ⭐ Analyse détaillée
 │   ├── detailed_comparison.json                 # Données Taxi
@@ -94,7 +94,7 @@ taxi-pbrl-project/
     └── MOUNTAINCAR_RESULTS_FINAL.md      # Résultats MC
 ```
 
-## 📖 Documentation
+## Doc Documentation
 
 - **⭐ `GUIDE_UTILISATION.md`** - Guide complet d'utilisation (COMMENCER ICI)
 - **🎬 `docs/visual_comparison_complete.md`** - Guide visualisation Taxi & MountainCar
@@ -104,26 +104,22 @@ taxi-pbrl-project/
 - **`results/comparison_insights.txt`** - Insights comparatifs
 - **`CHANGELOG_VISUAL_REPLAYS.md`** - Changelog visualisation
 
-## 🎯 Commandes Essentielles
+## [TARGET] Commandes Essentielles
 
 ```powershell
-# 🚕 TAXI - Workflow complet (7 min)
+# Taxi TAXI - Workflow complet (7 min)
 python train_classical_agent.py
 python train_pbrl_agent.py
 
-# 🏔️ MOUNTAINCAR - Workflow complet (21 min)
+# MountainCar MOUNTAINCAR - Workflow complet (21 min)
 python train_mountaincar_classical.py
 python collect_mountaincar_preferences_auto.py
 python train_mountaincar_pbrl.py
 
-# 📊 COMPARAISON - Visualisation finale
+# [PLOT] COMPARAISON - Visualisation finale
 python compare_taxi_vs_mountaincar.py
 
-# 🧹 NETTOYAGE - Supprimer fichiers obsolètes
-python cleanup_project.py
-```
-
-## 🎓 Pour Votre Rapport
+## Report Pour Votre Rapport
 
 ### Principaux Graphiques
 
@@ -146,29 +142,23 @@ python cleanup_project.py
 - **`results/mountaincar_pbrl_comparison.json`** - MC (200 épisodes)
 - **`results/comparison_taxi_vs_mountaincar.json`** - Comparaison
 
-## 🔬 Insights Clés
+## Insights Insights Clés
 
-### ✅ Efficacité d'Apprentissage
+### [OK] Efficacité d'Apprentissage
 - Taxi : **-87% d'épisodes** (2k vs 15k)
 - MountainCar : **-40% d'épisodes** (6k vs 10k)
 
-### ✅ Performances Finales
+### [OK] Performances Finales
 - Taxi : 7.77 ± 2.59 (PBRL) vs 7.82 ± 2.60 (Classical) → **Équivalent**
 - MountainCar : 77% succès (PBRL) vs 100% (Classical) → **Acceptable**
 
-### ✅ Stabilité
+### [OK] Stabilité
 - Taxi : Écart-type similaire (~2.6)
 - MountainCar : PBRL plus variable mais converge plus vite
 
-### 🎯 Conclusion
+### [TARGET] Conclusion
 Le PBRL démontre sa **robustesse** et sa **généralisation** sur deux environnements très différents, validant son utilité pour réduire les coûts d'entraînement.
 
-## 🧹 Nettoyage du Projet
-
-```powershell
-# Supprimer fichiers obsolètes (interactif)
-python cleanup_project.py
-```
 
 Supprime :
 - Fichiers temporaires et caches
@@ -181,7 +171,7 @@ Conserve :
 - Résultats importants
 - Documentation principale
 
-## 🐛 Dépannage
+## Debug Dépannage
 
 ### Erreur de module
 ```powershell
@@ -194,7 +184,7 @@ Les graphiques sont sauvegardés automatiquement dans `results/`. Ouvrez les fic
 ### Entraînement trop lent
 Réduisez `n_episodes` dans les scripts d'entraînement.
 
-## 📞 Support
+## Support Support
 
 Pour plus d'informations, consultez :
 - **`GUIDE_UTILISATION.md`** - Guide complet et détaillé
@@ -202,16 +192,16 @@ Pour plus d'informations, consultez :
 
 ---
 
-## 🏆 Statut du Projet
+## Status Statut du Projet
 
-✅ **TERMINÉ ET VALIDÉ**
+[OK] **TERMINÉ ET VALIDÉ**
 
-- ✅ Deux environnements implémentés (Taxi + MountainCar)
-- ✅ Agents Classical et PBRL fonctionnels
-- ✅ Comparaisons statistiques rigoureuses
-- ✅ Visualisations complètes
-- ✅ Documentation exhaustive
-- ✅ Prêt pour rapport et présentation
+- [OK] Deux environnements implémentés (Taxi + MountainCar)
+- [OK] Agents Classical et PBRL fonctionnels
+- [OK] Comparaisons statistiques rigoureuses
+- [OK] Visualisations complètes
+- [OK] Documentation exhaustive
+- [OK] Prêt pour rapport et présentation
 
 **Temps total d'exécution :** ~30 minutes (workflow complet)  
-**Résultats :** PBRL réduit les épisodes de 40% à 87% tout en maintenant des performances équivalentes ! 🚀
+**Résultats :** PBRL réduit les épisodes de 40% à 87% tout en maintenant des performances équivalentes ! [START]

@@ -114,7 +114,7 @@ class MountainCarAgent(QLearningAgent):
         
         if verbose:
             print(f"\n{'='*80}")
-            print(f"🚀 ENTRAÎNEMENT MOUNTAINCAR - {episodes} épisodes")
+            print(f"[START] ENTRAÎNEMENT MOUNTAINCAR - {episodes} épisodes")
             print(f"{'='*80}\n")
         
         for episode in range(episodes):
@@ -162,7 +162,7 @@ class MountainCarAgent(QLearningAgent):
         if verbose:
             final_success_rate = (success_count / episodes) * 100
             print(f"\n{'='*80}")
-            print(f"✅ ENTRAÎNEMENT TERMINÉ")
+            print(f"[OK] ENTRAÎNEMENT TERMINÉ")
             print(f"{'='*80}")
             print(f"Récompense moyenne finale (100 derniers): {np.mean(episode_rewards[-100:]):.2f}")
             print(f"Taux de succès: {final_success_rate:.1f}%")
@@ -225,7 +225,7 @@ class MountainCarAgent(QLearningAgent):
         
         if verbose:
             print(f"\n{'='*80}")
-            print(f"📊 ÉVALUATION MOUNTAINCAR - {episodes} épisodes")
+            print(f"[PLOT] ÉVALUATION MOUNTAINCAR - {episodes} épisodes")
             print(f"{'='*80}")
             print(f"Récompense moyenne: {stats['mean_reward']:.2f} ± {stats['std_reward']:.2f}")
             print(f"Récompense min/max: {stats['min_reward']:.2f} / {stats['max_reward']:.2f}")
@@ -289,7 +289,7 @@ class MountainCarAgent(QLearningAgent):
             ]
         
         print(f"\n{'='*80}")
-        print("🗺️  POLITIQUE APPRISE (échantillon d'états)")
+        print("[MAP]  POLITIQUE APPRISE (échantillon d'états)")
         print(f"{'='*80}\n")
         
         for position, velocity in sample_states:
@@ -325,14 +325,14 @@ def test_mountain_car_agent():
     agent.train(env, episodes=1000, verbose=True)
     
     # Évaluation
-    print("\n📊 Évaluation...")
+    print("\n[PLOT] Évaluation...")
     agent.evaluate(env, episodes=50, verbose=True)
     
     # Visualisation de la politique
     agent.visualize_policy()
     
     env.close()
-    print("✅ Test terminé!")
+    print("[OK] Test terminé!")
 
 
 if __name__ == "__main__":
