@@ -124,7 +124,7 @@ def main():
     print(f"{'='*80}\n")
     
     # Configuration
-    TRAIN_EPISODES = 10000
+    TRAIN_EPISODES = 6000  # RÉDUIT pour avoir 70-80% succès
     EVAL_EPISODES = 200
     N_POSITION_BINS = 20
     N_VELOCITY_BINS = 20

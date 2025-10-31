@@ -87,8 +87,8 @@ def main():
     print("[START] ENTRAÎNEMENT PBRL - MOUNTAINCAR-V0")
     print(f"{'='*80}\n")
     
-    # Configuration OPTIMISÉE v2
-    PBRL_EPISODES = 10000  # Même nombre que classical pour comparaison équitable
+    # Configuration pour comparaison équitable
+    PBRL_EPISODES = 6000  # Même nombre que classical
     EVAL_EPISODES = 200
     
     results_dir = "results"
@@ -146,7 +146,7 @@ def main():
         learning_rate=0.12,        # Équilibré
         discount_factor=0.99,
         epsilon=1.0,
-        epsilon_decay=0.9992,      # Légèrement plus rapide
+        epsilon_decay=0.999,       # Même que classical pour comparaison
         epsilon_min=0.01,
         preference_weight=0.6      # Modéré pour éviter sur-apprentissage
     )
